@@ -8,7 +8,7 @@ import site.metacoding.miniproject.domain.need_skill.NeedSkill;
 
 @Getter
 @Setter
-public class NoticeApplyDto {
+public class NoticeApplyRespDto {
 	private Integer noticeId;
 	private Integer companyId;
 	private String noticeTitle;

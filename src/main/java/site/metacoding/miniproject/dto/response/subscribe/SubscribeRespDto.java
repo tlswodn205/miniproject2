@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SubscribeDto {
+public class SubscribeRespDto {
 	private Integer subscribeId;
 	private Integer companyId;
 	private String companyName;

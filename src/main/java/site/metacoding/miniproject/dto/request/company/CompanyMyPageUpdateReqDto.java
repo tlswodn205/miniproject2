@@ -3,13 +3,11 @@ package site.metacoding.miniproject.dto.request.company;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.domain.company.Company;
-import site.metacoding.miniproject.domain.user.User;
 
 @RequiredArgsConstructor
 @Setter
 @Getter
-public class CompanyMyPageUpdateDto {
+public class CompanyMyPageUpdateReqDto {
 	private Integer userId;
 	private String password;
 	private String ceoName;

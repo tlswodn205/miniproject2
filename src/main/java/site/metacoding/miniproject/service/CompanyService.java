@@ -1,7 +1,6 @@
 package site.metacoding.miniproject.service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -22,16 +21,18 @@ import site.metacoding.miniproject.domain.subscribe.Subscribe;
 import site.metacoding.miniproject.domain.subscribe.SubscribeDao;
 import site.metacoding.miniproject.domain.user.User;
 import site.metacoding.miniproject.domain.user.UserDao;
-import site.metacoding.miniproject.dto.request.company.CompanyInsertDto;
-import site.metacoding.miniproject.dto.request.company.CompanyJoinDto;
-import site.metacoding.miniproject.dto.request.company.CompanyMyPageUpdateDto;
-import site.metacoding.miniproject.dto.request.notice.NoticeInsertDto;
-import site.metacoding.miniproject.dto.response.company.CompanyIntroductionDto;
-import site.metacoding.miniproject.dto.response.company.CompanyMyPageDto;
-import site.metacoding.miniproject.dto.response.company.CompanyRecommendDto;
+import site.metacoding.miniproject.dto.request.company.CompanyInsertReqDto;
+import site.metacoding.miniproject.dto.request.company.CompanyJoinReqDto;
+import site.metacoding.miniproject.dto.request.company.CompanyMyPageUpdateReqDto;
+import site.metacoding.miniproject.dto.request.notice.NoticeInsertReqDto;
+import site.metacoding.miniproject.dto.response.company.CompanyIntroductionRespDto;
+import site.metacoding.miniproject.dto.response.company.CompanyJoinRespDto;
+import site.metacoding.miniproject.dto.response.company.CompanyMyPageRespDto;
+import site.metacoding.miniproject.dto.response.company.CompanyMyPageUpdateRespDto;
+import site.metacoding.miniproject.dto.response.company.CompanyRecommendRespDto;
 import site.metacoding.miniproject.dto.response.notice.NoticeRespDto;
-import site.metacoding.miniproject.dto.response.recommend.RecommendDetailDto;
-import site.metacoding.miniproject.dto.response.subscribe.SubscribeDto;
+import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
+import site.metacoding.miniproject.dto.response.subscribe.SubscribeRespDto;
 
 @RequiredArgsConstructor
 @Service
@@ -46,24 +47,24 @@ public class CompanyService {
 	private final SubmitResumeDao submitResumeDao;
 
 	@Transactional(rollbackFor = { RuntimeException.class })
-	public void 기업회원가입(CompanyJoinDto companyJoinDto) {
+	public CompanyJoinRespDto 기업회원가입(CompanyJoinReqDto companyJoinDto) {
 		userDao.insert(companyJoinDto.toUser());
 		User userPS = userDao.findByUsername(companyJoinDto.getUsername());
 		companyDao.insert(companyJoinDto.toCompany(userPS.getUserId()));
+		return companyDao.CompanyJoinResult(userPS.getUserId());
 	}
 
 	@Transactional
-	public CompanyInsertDto 기업이력등록(Integer CompanyId, CompanyInsertDto companyInsertDto) {
+	public CompanyInsertReqDto 기업이력등록(Integer CompanyId, CompanyInsertReqDto companyInsertDto) {
 		companyInsertDto.setCompanyId(CompanyId);
-		companyDao.companyInsert(companyInsertDto);
+		companyDao.updateCompanyIntroduction(companyInsertDto);
 		return companyInsertDto;
 	}
 
 	@Transactional
-	public CompanyIntroductionDto 기업이력가져오기(Integer companyId) {
-		Company company = companyDao.findById(companyId);
-		CompanyIntroductionDto companyIntroductionDto = new CompanyIntroductionDto(companyId, company.getPhoto(),
-				company.getIntroduction(), company.getHistory(), company.getCompanyGoal(), company.getUserId());
+	public CompanyIntroductionRespDto 기업이력가져오기(Integer userId) {
+		Company company = companyDao.findByUserId(userId);
+		CompanyIntroductionRespDto companyIntroductionDto = new CompanyIntroductionRespDto(company);
 		return companyIntroductionDto;
 	}
 
@@ -73,8 +74,8 @@ public class CompanyService {
 	}
 
 	@Transactional
-	public List<CompanyRecommendDto> 기업추천리스트보기() {
-		List<CompanyRecommendDto> companyRecommendDtoList = companyDao.findToRecommned();
+	public List<CompanyRecommendRespDto> 기업추천리스트보기() {
+		List<CompanyRecommendRespDto> companyRecommendDtoList = companyDao.findToRecommned();
 
 		for (int i = 0; i < companyRecommendDtoList.size(); i++) {
 			List<NeedSkill> needSkillList = needSkillDao.findByNoticeId(companyRecommendDtoList.get(i).getNoticeId());
@@ -104,10 +105,10 @@ public class CompanyService {
 	}
 
 	@Transactional
-	public List<CompanyRecommendDto> NoticeId로공고불러오기(List<Integer> noticeList) {
-		List<CompanyRecommendDto> companyRecommendDtoList = new ArrayList<>();
+	public List<CompanyRecommendRespDto> NoticeId로공고불러오기(List<Integer> noticeList) {
+		List<CompanyRecommendRespDto> companyRecommendDtoList = new ArrayList<>();
 		for (int i = 0; i < noticeList.size(); i++) {
-			CompanyRecommendDto companyRecommendDto = companyDao.findToNoticeId(noticeList.get(i));
+			CompanyRecommendRespDto companyRecommendDto = companyDao.findToNoticeId(noticeList.get(i));
 			companyRecommendDto.setNeedSkillList(needSkillDao.findByNoticeId(noticeList.get(i)));
 			companyRecommendDtoList.add(companyRecommendDto);
 			if (i >= 19) {
@@ -118,11 +119,11 @@ public class CompanyService {
 	}
 
 	@Transactional
-	public List<SubscribeDto> 구독목록불러오기(int userId) {
+	public List<SubscribeRespDto> 구독목록불러오기(int userId) {
 		List<Subscribe> subscribeList = subscribeDao.findByUserId(userId);
-		List<SubscribeDto> subscribeDtoList = new ArrayList<>();
+		List<SubscribeRespDto> subscribeDtoList = new ArrayList<>();
 		for (int i = 0; i < subscribeList.size(); i++) {
-			subscribeDtoList.add(new SubscribeDto(subscribeList.get(i).getSubscribeId(),
+			subscribeDtoList.add(new SubscribeRespDto(subscribeList.get(i).getSubscribeId(),
 					companyDao.findByUserId(subscribeList.get(i).getSubjectId()).getCompanyId(),
 					companyDao.findByUserId(subscribeList.get(i).getSubjectId()).getCompanyName()));
 		}
@@ -150,7 +151,7 @@ public class CompanyService {
 	}
 
 	@Transactional
-	public RecommendDetailDto 기업추천불러오기(Integer userId, Integer subjectId) {
+	public RecommendDetailRespDto 기업추천불러오기(Integer userId, Integer subjectId) {
 		return recommendDao.findAboutsubject(userId, subjectId);
 	}
 
@@ -177,7 +178,7 @@ public class CompanyService {
 	}
 
 	@Transactional
-	public void 공고등록하기(NoticeInsertDto noticeInsertDto) {
+	public void 공고등록하기(NoticeInsertReqDto noticeInsertDto) {
 		System.out.println(noticeInsertDto.getDegree());
 		noticeDao.insert(noticeInsertDto.toNotice());
 		for (int i = 0; i < noticeInsertDto.getNeedSkill().size(); i++) {
@@ -193,15 +194,18 @@ public class CompanyService {
 
 	// 기업 마이페이지 정보 보기 id, dto(password,email ...)
 	@Transactional
-	public CompanyMyPageDto 기업마이페이지정보보기(Integer userId) {
-		CompanyMyPageDto companyMyPageDtoPS = companyDao.findToCompanyMyPage(userId);
-		return companyMyPageDtoPS;
+	public CompanyMyPageRespDto 기업마이페이지정보보기(Integer userId) {
+		CompanyMyPageRespDto companyMyPageRespDtoPS = companyDao.findToCompanyMyPage(userId);
+		return companyMyPageRespDtoPS;
 	}
 
 	@Transactional
-	public void 기업회원정보수정(CompanyMyPageUpdateDto companyMyPageUpdateDto) {
-		companyDao.updateToCompany(companyMyPageUpdateDto);
-		userDao.updateToUser(companyMyPageUpdateDto);
+	public CompanyMyPageUpdateRespDto 기업회원정보수정(CompanyMyPageUpdateReqDto companyMyPageUpdateReqDto) {
+		companyDao.updateToCompany(companyMyPageUpdateReqDto);
+		userDao.updateToUser(companyMyPageUpdateReqDto);
+		CompanyMyPageUpdateRespDto companyMyPageUpdateRespDto = companyDao
+				.CompanyMyPageUpdateResult(companyMyPageUpdateReqDto.getUserId());
+		return companyMyPageUpdateRespDto;
 	}
 
 	@Transactional

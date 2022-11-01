@@ -6,7 +6,7 @@ import site.metacoding.miniproject.domain.resume.Resume;
 
 @Getter
 @Setter
-public class ResumeWriteDto {
+public class ResumeWriteReqDto {
 	private Integer personId;
 	private Integer resumeId;
 	private String resumeTitle;

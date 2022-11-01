@@ -17,10 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.user.User;
-import site.metacoding.miniproject.dto.request.resume.ResumeWriteDto;
+import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
 import site.metacoding.miniproject.dto.response.CMRespDto;
-import site.metacoding.miniproject.dto.response.resume.ResumeDetailFormDto;
-import site.metacoding.miniproject.dto.response.resume.ResumeFormDto;
+import site.metacoding.miniproject.dto.response.resume.ResumeDetailFormRespDto;
+import site.metacoding.miniproject.dto.response.resume.ResumeFormRespDto;
 import site.metacoding.miniproject.service.PersonService;
 import site.metacoding.miniproject.service.ResumeService;
 
@@ -36,7 +36,7 @@ public class ResumeController {
 	public CMRespDto<?> resumeForm(Model model) {
 		User userPS = (User) session.getAttribute("principal"); // 로그인 정보 가져오기
 		Integer id = personService.개인번호갖고오기(userPS.getUserId()); // 구직자 개인번호 가져오기
-		ResumeFormDto personPS = personService.이력서내용가져오기(id); // 이력서내용가져오기
+		ResumeFormRespDto personPS = personService.이력서내용가져오기(id); // 이력서내용가져오기
 		model.addAttribute("person", personPS);
 		model.addAttribute("user", userPS);
 		model.addAttribute("id", id);
@@ -45,7 +45,7 @@ public class ResumeController {
 
 	@PostMapping(value = "/resume/save")
 	public CMRespDto<?> create(@RequestPart("file") MultipartFile file,
-			@RequestPart("resumeWriteDto") ResumeWriteDto resumeWriteDto) throws Exception {
+			@RequestPart("resumeWriteDto") ResumeWriteReqDto resumeWriteDto) throws Exception {
 		int pos = file.getOriginalFilename().lastIndexOf(".");
 		String extension = file.getOriginalFilename().substring(pos + 1);
 		String filePath = "C:\\temp\\img\\";
@@ -73,7 +73,7 @@ public class ResumeController {
 
 	@PostMapping(value = "/resume/update")
 	public CMRespDto<?> update(@RequestPart("file") MultipartFile file,
-			@RequestPart("resumeWriteDto") ResumeWriteDto resumeWriteDto) throws Exception {
+			@RequestPart("resumeWriteDto") ResumeWriteReqDto resumeWriteDto) throws Exception {
 		int pos = file.getOriginalFilename().lastIndexOf(".");
 		String extension = file.getOriginalFilename().substring(pos + 1);
 		String filePath = "C:\\temp\\img\\";
@@ -101,14 +101,13 @@ public class ResumeController {
 
 	// 이력서 상세보기 페이지
 	@GetMapping("/person/resumeDetailForm/{resumeId}")
-	public CMRespDto<?> resumeDetail(Model model, @PathVariable Integer resumeId) {
+	public CMRespDto<?> resumeDetailForm(Model model, @PathVariable Integer resumeId) {
 		User userPS = (User) session.getAttribute("principal");
-		ResumeDetailFormDto personPS2 = resumeService.이력서상세보기(resumeId);
-		ResumeFormDto personPS = personService.이력서내용가져오기(personPS2.getPersonId()); // 이력서내용가져오기
+		ResumeDetailFormRespDto personPS2 = resumeService.이력서상세보기(resumeId);
+		ResumeFormRespDto personPS = personService.이력서내용가져오기(personPS2.getPersonId()); // 이력서내용가져오기
 		model.addAttribute("person", personPS);
 		model.addAttribute("person2", personPS2);
 		model.addAttribute("principal", userPS);
 		return new CMRespDto<>(1, "이력서 상세보기 페이지 불러오기 성공", null);
 	}
-
 }

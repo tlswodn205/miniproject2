@@ -7,7 +7,7 @@
     FROM Person_Skill
   </select>
 
-  <select id="personSkillInfo" resultType="site.metacoding.miniproject.dto.response.person.PersonInfoDto">
+  <select id="personSkillInfo" resultType="site.metacoding.miniproject.dto.response.person.PersonInfoRespDto">
    SELECT *
     FROM Person_Skill
     WHERE person_id = #{personId}
@@ -20,7 +20,7 @@
   </select>
 
   <select id="findByPersonId" resultType="site.metacoding.miniproject.domain.person_skill.PersonSkill">
-    SELECT *
+    SELECT skill
     FROM Person_Skill
     WHERE person_Id = #{personId}
   </select>

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.user.User;
-import site.metacoding.miniproject.dto.request.user.LoginDto;
+import site.metacoding.miniproject.dto.request.user.LoginReqDto;
 import site.metacoding.miniproject.dto.response.CMRespDto;
 import site.metacoding.miniproject.service.UserService;
 
@@ -22,7 +22,7 @@ public class UserController {
     private final HttpSession session;
 
     @PostMapping("/login")
-    public CMRespDto<?> login(@RequestBody LoginDto loginDto) {
+    public CMRespDto<?> login(@RequestBody LoginReqDto loginDto) {
 
         User principal = userService.로그인(loginDto);
         if (principal == null) {
@@ -31,7 +31,7 @@ public class UserController {
         session.setAttribute("principal", principal);
 
         User isLogin = (User) session.getAttribute("principal");
-        return new CMRespDto<>(1, "로그인성공", null);
+        return new CMRespDto<>(1, "로그인성공", isLogin);
     }
 
     // 로그인 페이지
@@ -43,8 +43,9 @@ public class UserController {
     // 로그아웃
     @GetMapping("/logout")
     public CMRespDto<?> logout() {
+        User userPS = (User) session.getAttribute("principal");
         session.invalidate();
-        return new CMRespDto<>(1, "로그아웃 성공", null);
+        return new CMRespDto<>(1, "로그아웃 성공", userPS);
     }
 
     // 메인 페이지

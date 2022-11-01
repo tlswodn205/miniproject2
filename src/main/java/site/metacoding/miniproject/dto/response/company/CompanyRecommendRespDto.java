@@ -11,7 +11,7 @@ import site.metacoding.miniproject.domain.need_skill.NeedSkill;
 @Setter
 @Getter
 @NoArgsConstructor
-public class CompanyRecommendDto {
+public class CompanyRecommendRespDto {
 	private Integer recommendCount;
 	private Integer noticeId;
 	private Integer userId;

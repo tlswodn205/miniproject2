@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import site.metacoding.miniproject.dto.response.person.PersonInfoDto;
+import site.metacoding.miniproject.dto.response.person.PersonInfoRespDto;
 
 public interface PersonSkillDao {
 	public void insert(@Param("personId") Integer personId, @Param("skill") String skill);
@@ -21,7 +21,7 @@ public interface PersonSkillDao {
 
 	public Integer findBySkillAndPersonId(@Param("skill") String skill, @Param("personId") Integer personId);
 
-	public List<PersonSkill> findByPersonId(Integer personId);
+	public List<String> findByPersonId(Integer personId);
 
-	public List<PersonInfoDto> personSkillInfo(Integer personId);
+	public List<PersonInfoRespDto> personSkillInfo(Integer personId);
 }

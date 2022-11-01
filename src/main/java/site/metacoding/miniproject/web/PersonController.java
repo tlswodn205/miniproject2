@@ -19,23 +19,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.notice.Notice;
-import site.metacoding.miniproject.domain.person.PersonDao;
 import site.metacoding.miniproject.domain.resume.Resume;
 import site.metacoding.miniproject.domain.submit_resume.SubmitResume;
-import site.metacoding.miniproject.domain.subscribe.Subscribe;
-import site.metacoding.miniproject.domain.subscribe.SubscribeDao;
 import site.metacoding.miniproject.domain.user.User;
-import site.metacoding.miniproject.dto.request.person.PersonJoinDto;
-import site.metacoding.miniproject.dto.request.person.PersonMyPageDto;
-import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateDto;
-import site.metacoding.miniproject.dto.request.resume.ResumeWriteDto;
+import site.metacoding.miniproject.dto.request.person.PersonJoinReqDto;
+import site.metacoding.miniproject.dto.request.person.PersonMyPageReqDto;
+import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateReqDto;
+import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
 import site.metacoding.miniproject.dto.response.CMRespDto;
-import site.metacoding.miniproject.dto.response.notice.AppliersDto;
-import site.metacoding.miniproject.dto.response.notice.NoticeApplyDto;
-import site.metacoding.miniproject.dto.response.person.InterestPersonDto;
-import site.metacoding.miniproject.dto.response.person.PersonInfoDto;
-import site.metacoding.miniproject.dto.response.person.PersonRecommendListDto;
-import site.metacoding.miniproject.dto.response.recommend.RecommendDetailDto;
+import site.metacoding.miniproject.dto.response.notice.AppliersRespDto;
+import site.metacoding.miniproject.dto.response.notice.NoticeApplyRespDto;
+import site.metacoding.miniproject.dto.response.person.InterestPersonRespDto;
+import site.metacoding.miniproject.dto.response.person.PersonInfoRespDto;
+import site.metacoding.miniproject.dto.response.person.PersonJoinRespDto;
+import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto;
+import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
 import site.metacoding.miniproject.service.CompanyService;
 import site.metacoding.miniproject.service.PersonService;
 import site.metacoding.miniproject.service.UserService;
@@ -50,12 +48,12 @@ public class PersonController {
 
 	// 회원가입 응답
 	@PostMapping("/person/join")
-	public @ResponseBody CMRespDto<?> joinPerson(@RequestBody PersonJoinDto personJoinDto) {
-		User userPS = userService.유저네임으로유저찾기(personJoinDto.getUsername());
+	public @ResponseBody CMRespDto<?> joinPerson(@RequestBody PersonJoinReqDto personJoinReqDto) {
+		User userPS = userService.유저네임으로유저찾기(personJoinReqDto.getUsername());
 		if (userPS != null) {
 			return new CMRespDto<>(-1, "회원가입 실패", null);
 		}
-		personService.회원가입(personJoinDto);
+		PersonJoinRespDto personJoinRespDto = personService.회원가입(personJoinReqDto);
 		return new CMRespDto<>(1, "회원가입 성공", null);
 
 	}
@@ -69,33 +67,33 @@ public class PersonController {
 
 	// 이력서 응답
 	@PostMapping("/save/resume/{personId}")
-	public CMRespDto<?> resumeWrite(@RequestBody ResumeWriteDto resumeWriteDto,
+	public CMRespDto<?> resumeWrite(@RequestBody ResumeWriteReqDto resumeWriteDto,
 			@PathVariable Integer personId) {
 		personService.이력서등록(resumeWriteDto, personId);
 		return new CMRespDto<>(1, "이력서 등록 성공", null);
 	}
 
 	@PostMapping("/person/recommend/{subjectId}")
-	public @ResponseBody CMRespDto<RecommendDetailDto> companyRecommend(@PathVariable Integer subjectId) {
+	public @ResponseBody CMRespDto<RecommendDetailRespDto> companyRecommend(@PathVariable Integer subjectId) {
 		User principal = (User) session.getAttribute("principal");
-		RecommendDetailDto recommendDetailDto = personService.구직자추천불러오기(principal.getUserId(), subjectId);
+		RecommendDetailRespDto recommendDetailDto = personService.구직자추천불러오기(principal.getUserId(), subjectId);
 		if (recommendDetailDto.getRecommendId() == null) {
 			personService.구직자추천하기(principal.getUserId(), subjectId);
 			recommendDetailDto = personService.구직자추천불러오기(principal.getUserId(), subjectId);
-			return new CMRespDto<RecommendDetailDto>(1, "추천 완료", recommendDetailDto);
+			return new CMRespDto<RecommendDetailRespDto>(1, "추천 완료", recommendDetailDto);
 		}
 		personService.구직자추천취소(recommendDetailDto.getRecommendId());
 		recommendDetailDto = personService.구직자추천불러오기(principal.getUserId(), subjectId);
-		return new CMRespDto<RecommendDetailDto>(1, "추천 취소 완료", recommendDetailDto);
+		return new CMRespDto<RecommendDetailRespDto>(1, "추천 취소 완료", recommendDetailDto);
 	}
 
 	// 구직자 상세보기 페이지
-	@GetMapping("/PersonInfo/{personId}")
-	public String 구직자상세보기(@PathVariable Integer personId, Model model) {
+	@GetMapping("/PersonDetailForm/{personId}")
+	public CMRespDto<?> personDetailForm(@PathVariable Integer personId, Model model) {
 		User userPS = (User) session.getAttribute("principal");
-		List<PersonInfoDto> personInfoDto = personService.개인정보보기(personId);
-		List<PersonInfoDto> personSkillInfoDto = personService.개인기술보기(personId);
-		RecommendDetailDto recommendDetailDto = new RecommendDetailDto();
+		List<PersonInfoRespDto> personInfoDto = personService.개인정보보기(personId);
+		List<PersonInfoRespDto> personSkillInfoDto = personService.개인기술보기(personId);
+		RecommendDetailRespDto recommendDetailDto = new RecommendDetailRespDto();
 		if (userPS == null) {
 			recommendDetailDto = personService.구직자추천불러오기(null, personInfoDto.get(0).getUserId());
 		} else {
@@ -104,66 +102,45 @@ public class PersonController {
 		model.addAttribute("recommendDetailDto", recommendDetailDto);
 		model.addAttribute("personInfoDto", personInfoDto);
 		model.addAttribute("personSkillInfoDto", personSkillInfoDto);
-		return "person/PersonInfo";
+		return new CMRespDto<>(1, "구직자 상세보기 페이지 불러오기 성공", null);
 	}
 
 	// 구직자 추천 페이지
 	@GetMapping("/person/recommendListForm")
 	public CMRespDto<?> PersonRecommendList(Model model) {
-		List<PersonRecommendListDto> personRecommendListDto = personService.구직자추천리스트보기();
+		List<PersonRecommendListRespDto> personRecommendListDto = personService.구직자추천리스트보기();
 		model.addAttribute("personRecommendListDto", personRecommendListDto);
 		return new CMRespDto<>(1, "구직자 추천 리스트 페이지 불러오기 성공", null);
 	}
 
 	@PostMapping("/person/skillPersonMatching/personSkill")
-	public CMRespDto<List<InterestPersonDto>> interestPersonSkillList(@RequestBody List<String> skillList,
+	public CMRespDto<List<InterestPersonRespDto>> interestPersonSkillList(@RequestBody List<String> skillList,
 			Model model) {
-		List<InterestPersonDto> interestPersonDto = personService.관심구직자리스트(personService.기술별관심구직자찾기(skillList));
-		model.addAttribute("interestPersonDto", interestPersonDto);
+		List<InterestPersonRespDto> interestPersonDto = personService.관심구직자리스트(personService.기술별관심구직자찾기(skillList));
 		return new CMRespDto<>(1, "기술별 관심 구칙자 불러오기 완료", interestPersonDto);
 	}
 
-	@PostMapping("/person/skillPersonMatching/degree")
-	public CMRespDto<List<InterestPersonDto>> interestPersonDegreeList(String degree, Model model) {
-		List<InterestPersonDto> interestPersonDto = personService.관심구직자리스트(personService.학력별관심구직자찾기(degree));
-		model.addAttribute("interestPersonDto", interestPersonDto);
-		return new CMRespDto<>(1, "학력별 관심 구칙자 불러오기 완료", interestPersonDto);
-	}
-
-	@GetMapping("/person/skillPersonMatching/{career}/career")
-	public CMRespDto<List<InterestPersonDto>> interestPersonDegreeList(@PathVariable Integer career, Model model) {
-		List<InterestPersonDto> interestPersonDto = personService.관심구직자리스트(personService.경력별관심구직자찾기(career));
-		model.addAttribute("interestPersonDto", interestPersonDto);
-		return new CMRespDto<>(1, "경력별 관심 구칙자 불러오기 완료", interestPersonDto);
-	}
-
 	@GetMapping("/person/skillPersonMatchingForm")
-	public CMRespDto<?> skillPersonMatching(Model model) {
+	public CMRespDto<?> skillPersonMatchingForm(Model model) {
 		int career = 0;
-		List<InterestPersonDto> interestPersonDto = personService.관심구직자리스트(personService.경력별관심구직자찾기(career));
-		model.addAttribute("interestPersonDto", interestPersonDto);
-		return new CMRespDto<>(1, "기술별 구직자 매칭 페이지 불러오기 성공", null);
+		List<InterestPersonRespDto> interestPersonDto = personService.관심구직자리스트(personService.경력별관심구직자찾기(career));
+		return new CMRespDto<>(1, "기술별 구직자 매칭 페이지 불러오기 성공", interestPersonDto);
 	}
 
 	// 구직자 마이페이지
 	@GetMapping("/personMypageForm")
-	public CMRespDto<?> PersonMypage(Model model) {
+	public CMRespDto<?> PersonMypageForm(Model model) {
 		User userPS = (User) session.getAttribute("principal");
-		PersonMyPageDto personMyPageDto = personService.구직자마이페이지정보보기(userPS.getUserId());
-		// List<PersonMyPageDto> personMyPageSkillDto = personService.구직자기술보기();
-		model.addAttribute("personMyPageDto", personMyPageDto);
-		// model.addAttribute("personMyPageSkillDto",personMyPageSkillDto);
-		return new CMRespDto<>(1, "구직자 마이 페이지 불러오기 성공", null);
+		PersonMyPageReqDto personMyPageDto = personService.구직자마이페이지정보보기(userPS.getUserId());
+		return new CMRespDto<>(1, "구직자 마이 페이지 불러오기 성공", personMyPageDto);
 	}
 
 	// 구직자 마이페이지 수정하기
 	@PutMapping("/api/personMypage")
-	public CMRespDto<?> updateToPerson(@RequestBody PersonMyPageUpdateDto personMyPageUpdateDto) {
-		System.out.println(personMyPageUpdateDto.getDegree());
+	public CMRespDto<?> updateToPerson(@RequestBody PersonMyPageUpdateReqDto personMyPageUpdateDto) {
 		User userPS = (User) session.getAttribute("principal");
-		System.out.println(userPS.getUserId());
-		personService.구직자회원정보수정(userPS.getUserId(), personMyPageUpdateDto);
-		return new CMRespDto<>(1, "구직자회원정보수정 성공", null);
+		personService.구직자회원정보수정(personMyPageUpdateDto);
+		return new CMRespDto<>(1, "구직자회원정보수정 성공", personService);
 	}
 
 	@DeleteMapping("/person/deleteResume/{resumeId}")
@@ -176,13 +153,12 @@ public class PersonController {
 	public CMRespDto<?> personResumeManage(Model model) {
 		User userPS = (User) session.getAttribute("principal");
 		List<Resume> resumeList = personService.이력서목록가져오기(userPS.getUserId());
-		model.addAttribute("resumeList", resumeList);
-		return new CMRespDto<>(1, "이력서 관리 페이지 불러오기 성공", null);
+		return new CMRespDto<>(1, "이력서 관리 페이지 불러오기 성공", resumeList);
 	}
 
 	@GetMapping("/person/personRecommendListForm")
 	public CMRespDto<?> personRecommendList(Model model) {
-		List<PersonRecommendListDto> personRecommendListDto = personService.구직자추천리스트보기();
+		List<PersonRecommendListRespDto> personRecommendListDto = personService.구직자추천리스트보기();
 		User userPS = (User) session.getAttribute("principal");
 		if (userPS != null) {
 			List<String> skillList = personService.유저아이디로마감임박공고의기술스택찾기(userPS.getUserId());
@@ -197,7 +173,7 @@ public class PersonController {
 
 	@GetMapping("/person/noticePerApplierForm/{noticeId}")
 	public CMRespDto<?> findNoticePerApplier(@PathVariable Integer noticeId, Model model) {
-		List<AppliersDto> appliersDtoList = personService.공고별구직자찾기(noticeId);
+		List<AppliersRespDto> appliersDtoList = personService.공고별구직자찾기(noticeId);
 		Notice notice = personService.공고하나불러오기(noticeId);
 		model.addAttribute("appliersDtoList", appliersDtoList);
 		model.addAttribute("notice", notice);
@@ -213,13 +189,12 @@ public class PersonController {
 	@GetMapping("/person/personApplyForm")
 	public CMRespDto<?> personApply(Model model) {
 		User userPS = (User) session.getAttribute("principal");
-		List<NoticeApplyDto> noticeApplyDtoList = personService.지원공고목록(userPS.getUserId());
+		List<NoticeApplyRespDto> noticeApplyDtoList = personService.지원공고목록(userPS.getUserId());
 		for (int i = 0; i < noticeApplyDtoList.size(); i++) {
 			noticeApplyDtoList.get(i)
 					.setNeedSkillList(companyService.noticeId로필요기술들고오기(noticeApplyDtoList.get(i).getNoticeId()));
 		}
-		model.addAttribute("noticeApplyDtoList", noticeApplyDtoList);
-		return new CMRespDto<>(1, "공고 지원 리스트 불러오기 성공", null);
+		return new CMRespDto<>(1, "공고 지원 리스트 불러오기 성공", noticeApplyDtoList);
 	}
 
 	@PostMapping("/company/submitResume/")

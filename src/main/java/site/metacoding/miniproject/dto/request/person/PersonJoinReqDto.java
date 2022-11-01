@@ -9,7 +9,7 @@ import site.metacoding.miniproject.domain.user.User;
 
 @NoArgsConstructor
 @Getter
-public class PersonJoinDto {
+public class PersonJoinReqDto {
 	private String username;
 	private String password;
 	private String role;

@@ -6,16 +6,15 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.metacoding.miniproject.domain.person_skill.PersonSkill;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class AppliersDto {
+public class AppliersRespDto {
 	private Integer resumeId;
 	private Integer personId;
 	private String personName;
 	private Integer career;
-	private List<PersonSkill> personSkillList;
+	private List<String> personSkillList;
 	private Timestamp createdAt;
 }

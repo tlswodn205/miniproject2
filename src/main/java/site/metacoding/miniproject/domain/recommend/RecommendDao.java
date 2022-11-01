@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import site.metacoding.miniproject.dto.response.recommend.RecommendDetailDto;
+import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
 
 public interface RecommendDao {
 	public List<Recommend> findAll();
@@ -17,5 +17,6 @@ public interface RecommendDao {
 
 	public void delete(int recommendId);
 
-	public RecommendDetailDto findAboutsubject(@Param("userId") Integer userId, @Param("subjectId") Integer subjectId);
+	public RecommendDetailRespDto findAboutsubject(@Param("userId") Integer userId,
+			@Param("subjectId") Integer subjectId);
 }

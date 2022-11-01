@@ -7,7 +7,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @Setter
 @Getter
-public class PersonMyPageUpdateDto {
+public class PersonMyPageUpdateReqDto {
 	private Integer userId;
 	private String password;
 	private String personName;

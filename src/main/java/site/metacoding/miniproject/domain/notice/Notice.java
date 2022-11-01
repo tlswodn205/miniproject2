@@ -2,7 +2,6 @@ package site.metacoding.miniproject.domain.notice;
 
 import java.sql.Timestamp;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +18,7 @@ public class Notice {
 	private Integer career;
 	private String noticeContent;
 	private Timestamp createdAt;
-	
+
 	@Builder
 	public Notice(Integer noticeId, Integer companyId, String noticeTitle, boolean isClosed, String salary,
 			String degree, Integer career, String noticeContent, Timestamp createdAt) {
@@ -34,6 +33,5 @@ public class Notice {
 		this.noticeContent = noticeContent;
 		this.createdAt = createdAt;
 	}
-	
-	
+
 }

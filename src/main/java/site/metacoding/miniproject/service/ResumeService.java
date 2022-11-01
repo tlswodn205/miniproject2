@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.resume.Resume;
 import site.metacoding.miniproject.domain.resume.ResumeDao;
-import site.metacoding.miniproject.dto.request.resume.ResumeWriteDto;
-import site.metacoding.miniproject.dto.response.resume.ResumeDetailFormDto;
+import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
+import site.metacoding.miniproject.dto.response.resume.ResumeDetailFormRespDto;
 
 @RequiredArgsConstructor
 @Service
@@ -15,21 +15,21 @@ public class ResumeService {
 	private final ResumeDao resumeDao;
 
 	@Transactional
-	public void 이력서등록하기(ResumeWriteDto resumeWriteDto) {
+	public void 이력서등록하기(ResumeWriteReqDto resumeWriteDto) {
 		resumeDao.save(resumeWriteDto);
 		System.out.println(resumeWriteDto.getResumeTitle());
 	}
 
 	@Transactional
-	public ResumeDetailFormDto 이력서상세보기(Integer resumeId) {
+	public ResumeDetailFormRespDto 이력서상세보기(Integer resumeId) {
 		Resume resume = resumeDao.findById(resumeId);
-		ResumeDetailFormDto resumeDetailFormDto = new ResumeDetailFormDto(resumeId, resume.getPersonId(),
+		ResumeDetailFormRespDto resumeDetailFormDto = new ResumeDetailFormRespDto(resumeId, resume.getPersonId(),
 				resume.getResumeTitle(), resume.getPhoto(), resume.getMyCloud(), resume.getIntroduction());
 		return resumeDetailFormDto;
 	}
 
 	@Transactional
-	public void 이력서수정하기(ResumeWriteDto resumeWriteDto) {
+	public void 이력서수정하기(ResumeWriteReqDto resumeWriteDto) {
 		resumeDao.update(resumeWriteDto);
 	}
 }

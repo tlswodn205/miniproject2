@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class PersonInfoDto {
+public class PersonInfoRespDto {
 	private Integer personId;
 	private Integer userId;
 	private String personName;

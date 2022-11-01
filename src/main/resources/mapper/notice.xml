@@ -49,15 +49,21 @@
     WHERE notice_id = #{noticeId}
   </update>
 
-  <select id="findNoticeApply" resultType="site.metacoding.miniproject.dto.response.notice.NoticeApplyDto">
+  <select id="findNoticeApply" resultType="site.metacoding.miniproject.dto.response.notice.NoticeApplyRespDto">
 		SELECT cn.notice_id, cn.notice_title, cn.resume_title, c.address, c.company_name, c.company_id
-		FROM (SELECT n.notice_Id, n.notice_title, n.company_Id ,ML.resume_title
-		FROM (SELECT s.*, pp.resume_title, pp.person_id
-		FROM(SELECT r.person_id, r.resume_title, r.resume_id
+		FROM (
+    SELECT n.notice_Id, n.notice_title, n.company_Id ,ML.resume_title
+		FROM (
+    SELECT s.*, pp.resume_title, pp.person_id
+		FROM(
+    SELECT r.person_id, r.resume_title, r.resume_id
 		FROM person p INNER JOIN resume r 
-		ON p.person_id = r.person_id WHERE user_id=#{userId}) pp INNER JOIN  submit_resume s
-		ON s.resume_Id = pp.resume_Id) ML INNER JOIN notice n
-		ON ML.notice_Id = n.notice_Id WHERE n.is_closed=0) cn INNER JOIN company c
+		ON p.person_id = r.person_id WHERE user_id=#{userId}) pp 
+    INNER JOIN  submit_resume s
+		ON s.resume_Id = pp.resume_Id) ML 
+    INNER JOIN notice n
+		ON ML.notice_Id = n.notice_Id WHERE n.is_closed=0) cn 
+    INNER JOIN company c
 		ON cn.company_id = c.company_id 
 	</select>
 </mapper>

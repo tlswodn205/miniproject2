@@ -25,7 +25,7 @@
 
   <update id="update"></update>
 
-  <select id="findAboutsubject" resultType="site.metacoding.miniproject.dto.response.recommend.RecommendDetailDto">
+  <select id="findAboutsubject" resultType="site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto">
     SELECT count(*) recommendCount ,( SELECT recommend_id
     FROM recommend
     WHERE subject_id = #{subjectId} and user_id = #{userId}) recommendId

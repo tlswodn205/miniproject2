@@ -17,7 +17,7 @@
 	</select>
 
 
-	<select id="personInfo" resultType="site.metacoding.miniproject.dto.response.person.PersonInfoDto">
+	<select id="personInfo" resultType="site.metacoding.miniproject.dto.response.person.PersonInfoRespDto">
     SELECT *
     FROM person
     WHERE person_id = #{personId}
@@ -76,7 +76,7 @@
 	</select>
 
 	<select id="findToPersonRecommned"
-		resultType="site.metacoding.miniproject.dto.response.person.PersonRecommendListDto">
+		resultType="site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto">
 		SELECT COUNT(subject_id) AS recommendCount, FIRST.*
 		FROM recommend Right OUTER JOIN
 		(
@@ -93,7 +93,7 @@
 
 
 	<select id="findToPersonMyPage"
-		resultType="site.metacoding.miniproject.dto.request.person.PersonMyPageDto">
+		resultType="site.metacoding.miniproject.dto.response.person.PersonMyPageRespDto">
 		SELECT u.user_id, u.username, u.password, p.person_name,
 		p.person_phone, p.is_gender, p.address, p.degree, p.career,
 		substr(person_email,1,
@@ -115,5 +115,13 @@
 		person_email=#{personEmail}
 		WHERE user_id = #{userId}
 	</update>
+
+	<select id="PersonJoinResult" resultType="site.metacoding.miniproject.dto.response.person.PersonJoinRespDto">
+		SELECT *
+		FROM person p INNER JOIN user u
+		on p.user_Id = u.user_id
+		WHERE p.user_id = #{userId}
+	</select>
+
 
 </mapper>

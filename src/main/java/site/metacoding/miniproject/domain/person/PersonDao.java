@@ -2,17 +2,18 @@ package site.metacoding.miniproject.domain.person;
 
 import java.util.List;
 
-import site.metacoding.miniproject.dto.request.person.PersonMyPageDto;
-import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateDto;
-import site.metacoding.miniproject.dto.response.person.PersonInfoDto;
-import site.metacoding.miniproject.dto.response.person.PersonRecommendListDto;
+import site.metacoding.miniproject.dto.request.person.PersonMyPageReqDto;
+import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateReqDto;
+import site.metacoding.miniproject.dto.response.person.PersonInfoRespDto;
+import site.metacoding.miniproject.dto.response.person.PersonJoinRespDto;
+import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto;
 
 public interface PersonDao {
 	public void insert(Person person);
 
 	public Person findById(Integer personId);
 
-	public List<PersonInfoDto> personInfo(Integer personId);
+	public List<PersonInfoRespDto> personInfo(Integer personId);
 
 	public List<Person> findAll();
 
@@ -26,9 +27,11 @@ public interface PersonDao {
 
 	public Integer findToId(Integer userId);
 
-	public List<PersonRecommendListDto> findToPersonRecommned();
+	public List<PersonRecommendListRespDto> findToPersonRecommned();
 
-	public PersonMyPageDto findToPersonMyPage(Integer userId);
+	public PersonMyPageReqDto findToPersonMyPage(Integer userId);
 
-	public void updateToPerson(PersonMyPageUpdateDto personMyPageUpdateDto);
+	public void updateToPerson(PersonMyPageUpdateReqDto personMyPageUpdateDto);
+
+	public PersonJoinRespDto personJoinResult(Integer userId);
 }

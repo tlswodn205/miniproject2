@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class RecommendDetailDto {
+public class RecommendDetailRespDto {
 	private Integer recommendCount;
 	private Integer recommendId;
 }

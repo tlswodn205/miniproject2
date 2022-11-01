@@ -5,24 +5,22 @@ import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.domain.person.Person;
 import site.metacoding.miniproject.domain.person_skill.PersonSkill;
-import site.metacoding.miniproject.domain.resume.Resume;
 
 @RequiredArgsConstructor
 @Setter
 @Getter
-public class PersonRecommendListDto {
-
-	private Integer personId;
+public class PersonMyPageRespDto {
 	private Integer userId;
-	private Integer recommendCount;
-	private Integer subjectId;
+	private String username;
+	private String password;
+	private Integer personId;
 	private String personName;
-	private String resumeTitle;
-	private Integer career;
-	private String degree;
+	private String personPhone;
+	private String isGender;
 	private String address;
+	private String degree;
+	private String career;
+	private String personEmail;
 	private List<PersonSkill> skill;
-	private boolean mark;
 }

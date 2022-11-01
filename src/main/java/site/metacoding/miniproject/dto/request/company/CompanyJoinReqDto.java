@@ -7,7 +7,7 @@ import site.metacoding.miniproject.domain.user.User;
 
 @NoArgsConstructor
 @Getter
-public class CompanyJoinDto {
+public class CompanyJoinReqDto {
 	private String username;
 	private String password;
 	private String role;
@@ -16,8 +16,6 @@ public class CompanyJoinDto {
 	private String companyEmail;
 	private String companyPhone;
 	private String address;
-	private String history;
-	private String introduction;
 	private String tech;
 	private String ceoName;
 

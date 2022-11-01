@@ -17,7 +17,7 @@
     VALUE( #{personId}, #{resumeTitle}, #{photo}, #{introduction}, #{myCloud}, now())
   </insert>
 
- <insert id="save" useGeneratedKeys="true" keyProperty="resumeId">
+  <insert id="save" useGeneratedKeys="true" keyProperty="resumeId">
     INSERT INTO resume(person_id, resume_title, photo, introduction, my_cloud, created_At )
     VALUE( #{personId}, #{resumeTitle}, #{photo}, #{introduction}, #{myCloud}, now())
   </insert>

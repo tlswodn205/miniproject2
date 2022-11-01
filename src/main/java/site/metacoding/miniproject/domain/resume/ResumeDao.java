@@ -2,11 +2,11 @@ package site.metacoding.miniproject.domain.resume;
 
 import java.util.List;
 
-import site.metacoding.miniproject.dto.request.resume.ResumeWriteDto;
+import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
 
 public interface ResumeDao {
 
-	public void save(ResumeWriteDto resumeWriteDto);
+	public void save(ResumeWriteReqDto resumeWriteDto);
 
 	public void insert(Resume resume);
 
@@ -14,7 +14,7 @@ public interface ResumeDao {
 
 	public List<Resume> findAll();
 
-	public void update(ResumeWriteDto resumeWriteDto); // dto생각
+	public void update(ResumeWriteReqDto resumeWriteDto); // dto생각
 
 	public void deleteById(Integer resumeId);
 

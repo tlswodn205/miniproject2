@@ -12,7 +12,7 @@ import site.metacoding.miniproject.domain.person_skill.PersonSkill;
 @AllArgsConstructor
 @Getter
 @Setter
-public class InterestPersonDto {
+public class InterestPersonRespDto {
 	private Integer personId;
 	private boolean Mark;
 	private Integer recommendCount;
@@ -20,5 +20,5 @@ public class InterestPersonDto {
 	private Integer career;
 	private String degree;
 	private String address;
-	private List<PersonSkill> personSkillList;
+	private List<String> personSkillList;
 }

@@ -23,17 +23,18 @@ import site.metacoding.miniproject.domain.submit_resume.SubmitResume;
 import site.metacoding.miniproject.domain.submit_resume.SubmitResumeDao;
 import site.metacoding.miniproject.domain.user.User;
 import site.metacoding.miniproject.domain.user.UserDao;
-import site.metacoding.miniproject.dto.request.person.PersonJoinDto;
-import site.metacoding.miniproject.dto.request.person.PersonMyPageDto;
-import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateDto;
-import site.metacoding.miniproject.dto.request.resume.ResumeWriteDto;
-import site.metacoding.miniproject.dto.response.notice.AppliersDto;
-import site.metacoding.miniproject.dto.response.notice.NoticeApplyDto;
-import site.metacoding.miniproject.dto.response.person.InterestPersonDto;
-import site.metacoding.miniproject.dto.response.person.PersonInfoDto;
-import site.metacoding.miniproject.dto.response.person.PersonRecommendListDto;
-import site.metacoding.miniproject.dto.response.recommend.RecommendDetailDto;
-import site.metacoding.miniproject.dto.response.resume.ResumeFormDto;
+import site.metacoding.miniproject.dto.request.person.PersonJoinReqDto;
+import site.metacoding.miniproject.dto.request.person.PersonMyPageReqDto;
+import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateReqDto;
+import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
+import site.metacoding.miniproject.dto.response.notice.AppliersRespDto;
+import site.metacoding.miniproject.dto.response.notice.NoticeApplyRespDto;
+import site.metacoding.miniproject.dto.response.person.InterestPersonRespDto;
+import site.metacoding.miniproject.dto.response.person.PersonInfoRespDto;
+import site.metacoding.miniproject.dto.response.person.PersonJoinRespDto;
+import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto;
+import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
+import site.metacoding.miniproject.dto.response.resume.ResumeFormRespDto;
 
 @RequiredArgsConstructor
 @Service
@@ -49,22 +50,25 @@ public class PersonService {
 	private final NeedSkillDao needSkillDao;
 
 	@Transactional(rollbackFor = { RuntimeException.class })
-	public void 회원가입(PersonJoinDto personJoinDto) {
-		userDao.insert(personJoinDto.toUser());
-		User userPS = userDao.findByUsername(personJoinDto.getUsername());
-		personDao.insert(personJoinDto.toPerson(userPS.getUserId()));
+	public PersonJoinRespDto 회원가입(PersonJoinReqDto personJoinReqDto) {
+		userDao.insert(personJoinReqDto.toUser());
+		User userPS = userDao.findByUsername(personJoinReqDto.getUsername());
+		personDao.insert(personJoinReqDto.toPerson(userPS.getUserId()));
 		Integer personId = personDao.findToId(userPS.getUserId());
-		List<String> personSkillList = personJoinDto.getPersonSkillList();
+		List<String> personSkillList = personJoinReqDto.getPersonSkillList();
 
 		for (int i = 0; i < personSkillList.size(); i++) {
 			personSkillDao.insert(personId, personSkillList.get(i));
 		}
+		PersonJoinRespDto personJoinRespDto = new PersonJoinRespDto();
+		personJoinRespDto.setPersonSkillList(personSkillDao.findByPersonId(personId));
+		return personJoinRespDto;
 	}
 
 	@Transactional
-	public ResumeFormDto 이력서내용가져오기(Integer personId) {
+	public ResumeFormRespDto 이력서내용가져오기(Integer personId) {
 		Person person = personDao.findById(personId);
-		ResumeFormDto resumeFormDto = new ResumeFormDto(personId, person.getUserId(), person.getPersonName(),
+		ResumeFormRespDto resumeFormDto = new ResumeFormRespDto(personId, person.getUserId(), person.getPersonName(),
 				person.getPersonEmail(),
 				person.getDegree(), person.getAddress(), person.getCareer(), personSkillDao.findByPersonId(personId));
 		return resumeFormDto;
@@ -107,15 +111,15 @@ public class PersonService {
 	}
 
 	@Transactional
-	public List<InterestPersonDto> 관심구직자리스트(List<Integer> personIdList) {
-		List<InterestPersonDto> interestPersonDtoList = new ArrayList<InterestPersonDto>();
+	public List<InterestPersonRespDto> 관심구직자리스트(List<Integer> personIdList) {
+		List<InterestPersonRespDto> interestPersonDtoList = new ArrayList<InterestPersonRespDto>();
 		int count = 0;
 
 		for (int i = 0; i < personIdList.size(); i++) {
 			count++;
 			Person person = personDao.findById(personIdList.get(i));
-			RecommendDetailDto CompanyDetailRecomDto = recommendDao.findAboutsubject(null, person.getUserId());
-			InterestPersonDto interestPersonDto = new InterestPersonDto(person.getPersonId(), false,
+			RecommendDetailRespDto CompanyDetailRecomDto = recommendDao.findAboutsubject(null, person.getUserId());
+			InterestPersonRespDto interestPersonDto = new InterestPersonRespDto(person.getPersonId(), false,
 					CompanyDetailRecomDto.getRecommendCount(), person.getPersonName(), person.getCareer(),
 					person.getDegree(), person.getAddress(), personSkillDao.findByPersonId(personIdList.get(i)));
 
@@ -129,7 +133,7 @@ public class PersonService {
 	}
 
 	@Transactional
-	public void 이력서등록(ResumeWriteDto resumeWriteDto, Integer personId) {
+	public void 이력서등록(ResumeWriteReqDto resumeWriteDto, Integer personId) {
 		Resume resume = resumeWriteDto.toEntity(personId);
 		resumeDao.insert(resume);
 	}
@@ -140,18 +144,18 @@ public class PersonService {
 	}
 
 	@Transactional
-	public List<PersonInfoDto> 개인정보보기(Integer personId) {
+	public List<PersonInfoRespDto> 개인정보보기(Integer personId) {
 		return personDao.personInfo(personId);
 	}
 
 	@Transactional
-	public List<PersonInfoDto> 개인기술보기(Integer personId) {
+	public List<PersonInfoRespDto> 개인기술보기(Integer personId) {
 		return personSkillDao.personSkillInfo(personId);
 	}
 
 	@Transactional
-	public List<PersonRecommendListDto> 구직자추천리스트보기() {
-		List<PersonRecommendListDto> personRecommendListDto = personDao.findToPersonRecommned();
+	public List<PersonRecommendListRespDto> 구직자추천리스트보기() {
+		List<PersonRecommendListRespDto> personRecommendListDto = personDao.findToPersonRecommned();
 		for (int i = 0; i < personRecommendListDto.size(); i++) {
 			Integer personId = personRecommendListDto.get(i).getPersonId();
 			personRecommendListDto.get(i).setSkill(personSkillDao.findByPersonId(personId));
@@ -161,15 +165,15 @@ public class PersonService {
 
 	// 구직자 마이페이지 정보 보기
 	@Transactional
-	public PersonMyPageDto 구직자마이페이지정보보기(Integer userId) {
-		PersonMyPageDto personMyPageDtoPs = personDao.findToPersonMyPage(userId);
+	public PersonMyPageReqDto 구직자마이페이지정보보기(Integer userId) {
+		PersonMyPageReqDto personMyPageDtoPs = personDao.findToPersonMyPage(userId);
 		return personMyPageDtoPs;
 
 	}
 
 	// 구직자 마이페이지 정보 수정
 	@Transactional
-	public void 구직자회원정보수정(Integer userId, PersonMyPageUpdateDto personMyPageUpdateDto) {
+	public void 구직자회원정보수정(PersonMyPageUpdateReqDto personMyPageUpdateDto) {
 		personDao.updateToPerson(personMyPageUpdateDto);
 		userDao.updateToUser(personMyPageUpdateDto);
 	}
@@ -189,8 +193,8 @@ public class PersonService {
 	}
 
 	@Transactional
-	public List<PersonRecommendListDto> 추천구직차불러오기() {
-		List<PersonRecommendListDto> PersonRecommendDtoList = personDao.findToPersonRecommned();
+	public List<PersonRecommendListRespDto> 추천구직차불러오기() {
+		List<PersonRecommendListRespDto> PersonRecommendDtoList = personDao.findToPersonRecommned();
 		for (int i = 0; i < PersonRecommendDtoList.size(); i++) {
 			PersonRecommendDtoList.get(i)
 					.setSkill(personSkillDao.findByPersonId(PersonRecommendDtoList.get(i).getPersonId()));
@@ -199,7 +203,7 @@ public class PersonService {
 	}
 
 	@Transactional
-	public RecommendDetailDto 구직자추천불러오기(Integer userId, Integer subjectId) {
+	public RecommendDetailRespDto 구직자추천불러오기(Integer userId, Integer subjectId) {
 		return recommendDao.findAboutsubject(userId, subjectId);
 	}
 
@@ -215,16 +219,16 @@ public class PersonService {
 	}
 
 	@Transactional
-	public List<AppliersDto> 공고별구직자찾기(Integer noticeId) {
+	public List<AppliersRespDto> 공고별구직자찾기(Integer noticeId) {
 		List<SubmitResume> submitResumedList = submitResumeDao.findByNoticeId(noticeId);
-		List<AppliersDto> appliersDtoList = new ArrayList<>();
+		List<AppliersRespDto> appliersDtoList = new ArrayList<>();
 		for (int i = 0; i < submitResumedList.size(); i++) {
 			Integer personId = resumeDao.findById(submitResumedList.get(i).getResumeId()).getPersonId();
 			Person person = personDao.findById(personId);
 			personDao.findById(personId);
-			List<PersonSkill> personSkillList = personSkillDao.findByPersonId(personId);
+			List<String> personSkillList = personSkillDao.findByPersonId(personId);
 			appliersDtoList
-					.add(new AppliersDto(submitResumedList.get(i).getResumeId(), personId, person.getPersonName(),
+					.add(new AppliersRespDto(submitResumedList.get(i).getResumeId(), personId, person.getPersonName(),
 							person.getCareer(), personSkillList, submitResumedList.get(i).getCreatedAt()));
 		}
 		return appliersDtoList;
@@ -242,7 +246,7 @@ public class PersonService {
 	}
 
 	@Transactional
-	public List<NoticeApplyDto> 지원공고목록(Integer userId) {
+	public List<NoticeApplyRespDto> 지원공고목록(Integer userId) {
 		return noticeDao.findNoticeApply(userId);
 	}
 
@@ -254,14 +258,14 @@ public class PersonService {
 	}
 
 	@Transactional
-	public List<PersonRecommendListDto> 별찍기(List<PersonRecommendListDto> personIdList, List<String> skillList) {
+	public List<PersonRecommendListRespDto> 별찍기(List<PersonRecommendListRespDto> personIdList, List<String> skillList) {
 
 		for (int i = 0; i < personIdList.size(); i++) {
 			int count = 0;
-			List<PersonSkill> personSkillList = personSkillDao.findByPersonId(personIdList.get(i).getPersonId());
+			List<String> personSkillList = personSkillDao.findByPersonId(personIdList.get(i).getPersonId());
 			for (int j = 0; j < personSkillList.size(); j++) {
 				for (int j2 = 0; j2 < skillList.size(); j2++) {
-					if (personSkillList.get(j).getSkill().equals(skillList.get(j2))) {
+					if (personSkillList.get(j).equals(skillList.get(j2))) {
 						count++;
 					}
 				}

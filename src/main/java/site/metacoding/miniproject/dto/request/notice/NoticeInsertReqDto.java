@@ -9,7 +9,7 @@ import site.metacoding.miniproject.domain.notice.Notice;
 
 @Getter
 @NoArgsConstructor
-public class NoticeInsertDto {
+public class NoticeInsertReqDto {
 	private Integer companyId;
 	private String noticeTitle;
 	private Integer career;
@@ -19,11 +19,11 @@ public class NoticeInsertDto {
 	private List<String> needSkill;
 
 	public Notice toNotice() {
-		return new Notice(null, this.companyId, this.noticeTitle, false, this.salary, this.degree, this.career,
-				this.noticeContent, null);
+		return Notice.builder().companyId(this.companyId).noticeTitle(this.noticeTitle).isClosed(false)
+				.salary(this.salary).degree(this.degree).career(this.career).noticeContent(this.noticeContent).build();
 	}
 
 	public NeedSkill toNeedSkill(Integer noticeId, Integer i) {
-		return new NeedSkill(null, noticeId, this.needSkill.get(i), null);
+		return NeedSkill.builder().noticeId(noticeId).skill(this.needSkill.get(i)).build();
 	}
 }

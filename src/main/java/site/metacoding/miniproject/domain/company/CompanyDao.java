@@ -2,10 +2,12 @@ package site.metacoding.miniproject.domain.company;
 
 import java.util.List;
 
-import site.metacoding.miniproject.dto.request.company.CompanyInsertDto;
-import site.metacoding.miniproject.dto.request.company.CompanyMyPageUpdateDto;
-import site.metacoding.miniproject.dto.response.company.CompanyMyPageDto;
-import site.metacoding.miniproject.dto.response.company.CompanyRecommendDto;
+import site.metacoding.miniproject.dto.request.company.CompanyInsertReqDto;
+import site.metacoding.miniproject.dto.request.company.CompanyMyPageUpdateReqDto;
+import site.metacoding.miniproject.dto.response.company.CompanyJoinRespDto;
+import site.metacoding.miniproject.dto.response.company.CompanyMyPageRespDto;
+import site.metacoding.miniproject.dto.response.company.CompanyMyPageUpdateRespDto;
+import site.metacoding.miniproject.dto.response.company.CompanyRecommendRespDto;
 
 public interface CompanyDao {
 	public void insert(Company company);
@@ -18,15 +20,19 @@ public interface CompanyDao {
 
 	public void deleteById(Integer companyId);
 
-	public List<CompanyRecommendDto> findToRecommned();
+	public List<CompanyRecommendRespDto> findToRecommned();
 
-	public CompanyMyPageDto findToCompanyMyPage(Integer userId);
+	public CompanyMyPageRespDto findToCompanyMyPage(Integer userId);
 
-	public void updateToCompany(CompanyMyPageUpdateDto companyMyPageUpdateDto);
+	public void updateToCompany(CompanyMyPageUpdateReqDto companyMyPageUpdateReqDto);
 
-	public void companyInsert(CompanyInsertDto companyInsertDto);
+	public void updateCompanyIntroduction(CompanyInsertReqDto companyInsertReqDto);
 
-	public CompanyRecommendDto findToNoticeId(Integer noticeId);
+	public CompanyRecommendRespDto findToNoticeId(Integer noticeId);
 
 	public Company findByUserId(Integer userId);
+
+	public CompanyMyPageUpdateRespDto CompanyMyPageUpdateResult(Integer userId);
+
+	public CompanyJoinRespDto CompanyJoinResult(Integer userId);
 }

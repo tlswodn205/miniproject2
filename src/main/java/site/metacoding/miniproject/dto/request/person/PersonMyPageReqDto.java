@@ -10,7 +10,7 @@ import site.metacoding.miniproject.domain.person_skill.PersonSkill;
 @RequiredArgsConstructor
 @Setter
 @Getter
-public class PersonMyPageDto {
+public class PersonMyPageReqDto {
 	private Integer userId;
 	private String username;
 	private String password;

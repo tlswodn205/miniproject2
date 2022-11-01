@@ -1,17 +1,17 @@
-package site.metacoding.miniproject.dto.response.company;
+package site.metacoding.miniproject.dto.request.company;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
+@NoArgsConstructor
 @Getter
-@AllArgsConstructor
-public class CompanyIntroductionDto {
+@Setter
+public class CompanyInsertReqDto {
 	private Integer companyId;
 	private String photo;
 	private String introduction;
 	private String history;
 	private String companyGoal;
-	private Integer userId;
+
 }
