@@ -16,6 +16,13 @@
 		WHERE company_Id = #{companyId}
 	</select>
 
+	
+	<insert id="companyInsertRespDto">
+		INSERT INTO company(company_id, photo, introduction, history, company_goal)
+		VALUE(#{companyId}, #{photo},  #{introduction}, #{history},  #{companyGoal})
+	</insert>
+
+
 	<insert id="insert">
 		INSERT INTO company(user_Id, company_Name,
 		company_Email, company_Phone,tech, address, ceo_Name,
@@ -109,6 +116,13 @@
 		from company
 		WHERE user_id = #{userId}
 	</select>
+
+
+    <select id="companyInfoUpdateResult" resultType="site.metacoding.miniproject.dto.response.company.CompanyInsertRespDto">
+		select *
+		from company
+		WHERE company_Id = #{companyId}
+    </select>
 
 	<select id="CompanyJoinResult" resultType="site.metacoding.miniproject.dto.response.company.CompanyJoinRespDto">
 		select *

@@ -4,6 +4,7 @@ import java.util.List;
 
 import site.metacoding.miniproject.dto.request.company.CompanyInsertReqDto;
 import site.metacoding.miniproject.dto.request.company.CompanyMyPageUpdateReqDto;
+import site.metacoding.miniproject.dto.response.company.CompanyInsertRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyJoinRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyMyPageRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyMyPageUpdateRespDto;
@@ -27,6 +28,8 @@ public interface CompanyDao {
 	public void updateToCompany(CompanyMyPageUpdateReqDto companyMyPageUpdateReqDto);
 
 	public void updateCompanyIntroduction(CompanyInsertReqDto companyInsertReqDto);
+
+	public CompanyInsertRespDto companyInfoUpdateResult(Integer companyId);
 
 	public CompanyRecommendRespDto findToNoticeId(Integer noticeId);
 
