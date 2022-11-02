@@ -29,6 +29,7 @@ import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateReqDto;
 import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
 import site.metacoding.miniproject.dto.response.CMRespDto;
 import site.metacoding.miniproject.dto.response.notice.AppliersRespDto;
+import site.metacoding.miniproject.dto.response.notice.FindNoticePerApplierRespDto;
 import site.metacoding.miniproject.dto.response.notice.NoticeApplyRespDto;
 import site.metacoding.miniproject.dto.response.person.InterestPersonRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonInfoRespDto;
@@ -165,11 +166,8 @@ public class PersonController {
 
 	@GetMapping("/person/noticePerApplierForm/{noticeId}")
 	public CMRespDto<?> findNoticePerApplier(@PathVariable Integer noticeId, Model model) {
-		List<AppliersRespDto> appliersDtoList = personService.공고별구직자찾기(noticeId);
-		Notice notice = personService.공고하나불러오기(noticeId);
-		model.addAttribute("appliersDtoList", appliersDtoList);
-		model.addAttribute("notice", notice);
-		return new CMRespDto<>(1, "공고별 지원자 리스트 페이지 불러오기 성공", null);
+		FindNoticePerApplierRespDto findNoticePerApplierRespDto = personService.공고별구직자리스트(noticeId);
+		return new CMRespDto<>(1, "공고별 지원자 리스트 페이지 불러오기 성공", findNoticePerApplierRespDto);
 	}
 
 	@PostMapping("/company/noticeClose/{noticeId}")

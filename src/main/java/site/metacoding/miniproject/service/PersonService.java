@@ -28,6 +28,7 @@ import site.metacoding.miniproject.dto.request.person.PersonMyPageReqDto;
 import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateReqDto;
 import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
 import site.metacoding.miniproject.dto.response.notice.AppliersRespDto;
+import site.metacoding.miniproject.dto.response.notice.FindNoticePerApplierRespDto;
 import site.metacoding.miniproject.dto.response.notice.NoticeApplyRespDto;
 import site.metacoding.miniproject.dto.response.person.InterestPersonRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonInfoRespDto;
@@ -255,6 +256,25 @@ public class PersonService {
 	@Transactional
 	public Notice 공고하나불러오기(int noticeId) {
 		return noticeDao.findById(noticeId);
+	}
+
+	@Transactional
+	public FindNoticePerApplierRespDto 공고별구직자리스트(Integer noticeId) {
+		FindNoticePerApplierRespDto findNoticePerApplierRespDto = new FindNoticePerApplierRespDto(
+				noticeDao.findById(noticeId));
+		List<SubmitResume> submitResumedList = submitResumeDao.findByNoticeId(noticeId);
+		List<AppliersRespDto> appliersDtoList = new ArrayList<>();
+		for (int i = 0; i < submitResumedList.size(); i++) {
+			Integer personId = resumeDao.findById(submitResumedList.get(i).getResumeId()).getPersonId();
+			Person person = personDao.findById(personId);
+			personDao.findById(personId);
+			List<String> personSkillList = personSkillDao.findByPersonId(personId);
+			appliersDtoList
+					.add(new AppliersRespDto(submitResumedList.get(i).getResumeId(), personId, person.getPersonName(),
+							person.getCareer(), personSkillList, submitResumedList.get(i).getCreatedAt()));
+		}
+		findNoticePerApplierRespDto.setAppliersDtoList(appliersDtoList);
+		return findNoticePerApplierRespDto;
 	}
 
 	@Transactional
