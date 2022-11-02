@@ -2,9 +2,11 @@ package site.metacoding.miniproject.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.company.CompanyDao;
 import site.metacoding.miniproject.domain.need_skill.NeedSkill;
@@ -26,6 +28,7 @@ import site.metacoding.miniproject.dto.request.company.CompanyMyPageUpdateReqDto
 import site.metacoding.miniproject.dto.request.notice.NoticeInsertReqDto;
 import site.metacoding.miniproject.dto.request.resume.SubmitResumeReqDto;
 import site.metacoding.miniproject.dto.response.company.CompanyDetailRespDto;
+import site.metacoding.miniproject.dto.response.company.CompanyInsertRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyIntroductionRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyJoinRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyMyPageRespDto;
@@ -58,10 +61,17 @@ public class CompanyService {
   }
 
   @Transactional
-  public CompanyInsertReqDto 기업이력등록(Integer CompanyId, CompanyInsertReqDto companyInsertDto) {
-    companyInsertDto.setCompanyId(CompanyId);
-    companyDao.updateCompanyIntroduction(companyInsertDto);
-    return companyInsertDto;
+  public CompanyInsertReqDto 기업이력등록(Integer CompanyId, CompanyInsertReqDto companyInsertReqDto) {
+    companyInsertReqDto.setCompanyId(CompanyId);
+    companyDao.updateCompanyIntroduction(companyInsertReqDto);
+    return companyInsertReqDto;
+  }
+
+  @Transactional
+  public CompanyInsertRespDto 기업이력등록하기(Integer CompanyId, CompanyInsertReqDto companyInsertReqDto) {
+    companyInsertReqDto.setCompanyId(CompanyId);
+    CompanyInsertRespDto companyInsertRespDto = companyDao.companyInfoUpdateResult(CompanyId);
+    return companyInsertRespDto;
   }
 
   @Transactional
@@ -266,8 +276,7 @@ public class CompanyService {
   // 기업 마이페이지 정보 보기 id, dto(password,email ...)
   @Transactional
   public CompanyMyPageRespDto 기업마이페이지정보보기(Integer userId) {
-    CompanyMyPageRespDto companyMyPageRespDtoPS = companyDao.findToCompanyMyPage(
-        userId);
+    CompanyMyPageRespDto companyMyPageRespDtoPS = companyDao.findToCompanyMyPage(userId);
     return companyMyPageRespDtoPS;
   }
 

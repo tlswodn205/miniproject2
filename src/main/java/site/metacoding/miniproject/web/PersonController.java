@@ -38,6 +38,7 @@ import site.metacoding.miniproject.dto.response.person.PersonJoinRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto;
 import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
 import site.metacoding.miniproject.dto.response.resume.SubmitResumeRespDto;
+import site.metacoding.miniproject.dto.response.resume.ResumeWriteRespDto;
 import site.metacoding.miniproject.service.CompanyService;
 import site.metacoding.miniproject.service.PersonService;
 import site.metacoding.miniproject.service.UserService;
@@ -73,8 +74,8 @@ public class PersonController {
 	@PostMapping("/save/resume/{personId}")
 	public CMRespDto<?> resumeWrite(@RequestBody ResumeWriteReqDto resumeWriteDto,
 			@PathVariable Integer personId) {
-		personService.이력서등록(resumeWriteDto, personId);
-		return new CMRespDto<>(1, "이력서 등록 성공", null);
+		ResumeWriteRespDto resumeWriteRespDto = personService.이력서등록(resumeWriteDto, personId);
+		return new CMRespDto<>(1, "이력서 등록 성공", resumeWriteRespDto);
 	}
 
 	@PostMapping("/person/recommend/{subjectId}")

@@ -36,6 +36,7 @@ import site.metacoding.miniproject.dto.response.person.PersonJoinRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto;
 import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
 import site.metacoding.miniproject.dto.response.resume.ResumeFormRespDto;
+import site.metacoding.miniproject.dto.response.resume.ResumeWriteRespDto;
 
 @RequiredArgsConstructor
 @Service
@@ -69,9 +70,7 @@ public class PersonService {
 	@Transactional
 	public ResumeFormRespDto 이력서내용가져오기(Integer personId) {
 		Person person = personDao.findById(personId);
-		ResumeFormRespDto resumeFormDto = new ResumeFormRespDto(personId, person.getUserId(), person.getPersonName(),
-				person.getPersonEmail(),
-				person.getDegree(), person.getAddress(), person.getCareer(), personSkillDao.findByPersonId(personId));
+		ResumeFormRespDto resumeFormDto = new ResumeFormRespDto(person, personSkillDao.findByPersonId(personId));
 		return resumeFormDto;
 	}
 
@@ -152,9 +151,11 @@ public class PersonService {
 	}
 
 	@Transactional
-	public void 이력서등록(ResumeWriteReqDto resumeWriteDto, Integer personId) {
+	public ResumeWriteRespDto 이력서등록(ResumeWriteReqDto resumeWriteDto, Integer personId) {
 		Resume resume = resumeWriteDto.toEntity(personId);
 		resumeDao.insert(resume);
+		ResumeWriteRespDto resumeWriteRespDto = resumeDao.resumeWriteResult(personId);
+		return resumeWriteRespDto;
 	}
 
 	@Transactional
