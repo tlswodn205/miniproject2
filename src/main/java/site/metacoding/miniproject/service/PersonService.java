@@ -36,6 +36,7 @@ import site.metacoding.miniproject.dto.response.person.PersonJoinRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto;
 import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
 import site.metacoding.miniproject.dto.response.resume.ResumeFormRespDto;
+import site.metacoding.miniproject.dto.response.resume.ResumeWriteRespDto;
 
 @RequiredArgsConstructor
 @Service
@@ -150,9 +151,11 @@ public class PersonService {
 	}
 
 	@Transactional
-	public void 이력서등록(ResumeWriteReqDto resumeWriteDto, Integer personId) {
+	public ResumeWriteRespDto 이력서등록(ResumeWriteReqDto resumeWriteDto, Integer personId) {
 		Resume resume = resumeWriteDto.toEntity(personId);
 		resumeDao.insert(resume);
+		ResumeWriteRespDto resumeWriteRespDto = resumeDao.resumeWriteResult(personId);
+		return resumeWriteRespDto;
 	}
 
 	@Transactional
