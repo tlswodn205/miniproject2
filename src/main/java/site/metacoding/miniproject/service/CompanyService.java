@@ -26,6 +26,7 @@ import site.metacoding.miniproject.dto.request.company.CompanyInsertReqDto;
 import site.metacoding.miniproject.dto.request.company.CompanyJoinReqDto;
 import site.metacoding.miniproject.dto.request.company.CompanyMyPageUpdateReqDto;
 import site.metacoding.miniproject.dto.request.notice.NoticeInsertReqDto;
+import site.metacoding.miniproject.dto.request.resume.SubmitResumeReqDto;
 import site.metacoding.miniproject.dto.response.company.CompanyDetailRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyInsertRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyIntroductionRespDto;
@@ -35,6 +36,7 @@ import site.metacoding.miniproject.dto.response.company.CompanyMyPageUpdateRespD
 import site.metacoding.miniproject.dto.response.company.CompanyRecommendRespDto;
 import site.metacoding.miniproject.dto.response.notice.NoticeRespDto;
 import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
+import site.metacoding.miniproject.dto.response.resume.SubmitResumeRespDto;
 import site.metacoding.miniproject.dto.response.subscribe.SubscribeDeleteRespDto;
 import site.metacoding.miniproject.dto.response.subscribe.SubscribeRespDto;
 
@@ -289,7 +291,9 @@ public class CompanyService {
   }
 
   @Transactional
-  public void 이력서제출하기(SubmitResume submitResume) {
-    submitResumeDao.insert(submitResume);
+  public SubmitResumeRespDto 이력서제출하기(SubmitResumeReqDto submitResumeReqDto) {
+    submitResumeDao.insert(submitResumeReqDto);
+    SubmitResumeRespDto submitResumeRespDto = submitResumeDao.submitResumeResult(submitResumeReqDto);
+    return submitResumeRespDto;
   }
 }

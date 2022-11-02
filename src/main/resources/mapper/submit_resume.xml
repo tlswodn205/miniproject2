@@ -30,4 +30,10 @@
   </select>
 
   <update id="update"></update>
+
+  <select id="submitResumeResult" resultType="site.metacoding.miniproject.dto.response.resume.SubmitResumeRespDto">
+    SELECT *
+    FROM submit_resume
+    WHERE notice_id = #{noticeId} and resume_id = #{resumeId}
+  </select>
 </mapper>

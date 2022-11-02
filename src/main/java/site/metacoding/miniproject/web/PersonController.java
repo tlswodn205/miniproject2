@@ -27,6 +27,7 @@ import site.metacoding.miniproject.dto.request.person.PersonJoinReqDto;
 import site.metacoding.miniproject.dto.request.person.PersonMyPageReqDto;
 import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateReqDto;
 import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
+import site.metacoding.miniproject.dto.request.resume.SubmitResumeReqDto;
 import site.metacoding.miniproject.dto.response.CMRespDto;
 import site.metacoding.miniproject.dto.response.notice.AppliersRespDto;
 import site.metacoding.miniproject.dto.response.notice.FindNoticePerApplierRespDto;
@@ -36,6 +37,7 @@ import site.metacoding.miniproject.dto.response.person.PersonInfoRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonJoinRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto;
 import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
+import site.metacoding.miniproject.dto.response.resume.SubmitResumeRespDto;
 import site.metacoding.miniproject.dto.response.resume.ResumeWriteRespDto;
 import site.metacoding.miniproject.service.CompanyService;
 import site.metacoding.miniproject.service.PersonService;
@@ -189,8 +191,8 @@ public class PersonController {
 	}
 
 	@PostMapping("/company/submitResume/")
-	public CMRespDto<?> submitResume(@RequestBody SubmitResume submitResume) {
-		companyService.이력서제출하기(submitResume);
-		return new CMRespDto<>(1, "이력서 제출 완료", null);
+	public CMRespDto<?> submitResume(@RequestBody SubmitResumeReqDto submitResumeReqDto) {
+		SubmitResumeRespDto submitResumeRespDto = companyService.이력서제출하기(submitResumeReqDto);
+		return new CMRespDto<>(1, "이력서 제출 완료", submitResumeRespDto);
 	}
 }
