@@ -19,7 +19,7 @@
     WHERE person_Skill_Id = #{personSkillId}
   </select>
 
-  <select id="findByPersonId" resultType="site.metacoding.miniproject.domain.person_skill.PersonSkill">
+  <select id="findByPersonId" resultType="String">
     SELECT skill
     FROM Person_Skill
     WHERE person_Id = #{personId}

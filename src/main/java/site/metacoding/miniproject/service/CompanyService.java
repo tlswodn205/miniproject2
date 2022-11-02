@@ -21,10 +21,12 @@ import site.metacoding.miniproject.domain.subscribe.Subscribe;
 import site.metacoding.miniproject.domain.subscribe.SubscribeDao;
 import site.metacoding.miniproject.domain.user.User;
 import site.metacoding.miniproject.domain.user.UserDao;
+import site.metacoding.miniproject.dto.SessionUserDto;
 import site.metacoding.miniproject.dto.request.company.CompanyInsertReqDto;
 import site.metacoding.miniproject.dto.request.company.CompanyJoinReqDto;
 import site.metacoding.miniproject.dto.request.company.CompanyMyPageUpdateReqDto;
 import site.metacoding.miniproject.dto.request.notice.NoticeInsertReqDto;
+import site.metacoding.miniproject.dto.response.company.CompanyDetailRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyIntroductionRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyJoinRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyMyPageRespDto;
@@ -105,7 +107,23 @@ public class CompanyService {
 	}
 
 	@Transactional
-	public List<CompanyRecommendRespDto> NoticeId로공고불러오기(List<Integer> noticeList) {
+	public List<CompanyRecommendRespDto> NoticeId로공고불러오기(List<String> skillList) {
+		List<Notice> noticeIds = noticeDao.findAll();
+		List<Integer> noticeList = new ArrayList<>();
+
+		for (int i = 0; i < noticeIds.size(); i++) {
+			int count = 0;
+			int count2 = 0;
+			for (int j = 0; j < skillList.size(); j++) {
+				if (needSkillDao.findBySkillAndNoticeId(skillList.get(j), noticeIds.get(i).getNoticeId()) != null) {
+					count++;
+				}
+			}
+			if (skillList.size() == count) {
+				noticeList.add(noticeIds.get(i).getNoticeId());
+			}
+		}
+
 		List<CompanyRecommendRespDto> companyRecommendDtoList = new ArrayList<>();
 		for (int i = 0; i < noticeList.size(); i++) {
 			CompanyRecommendRespDto companyRecommendDto = companyDao.findToNoticeId(noticeList.get(i));
@@ -138,6 +156,27 @@ public class CompanyService {
 	@Transactional
 	public Company 기업한건불러오기(int companyId) {
 		return companyDao.findById(companyId);
+	}
+
+	public CompanyDetailRespDto 기업상세보기불러오기(Integer companyId, SessionUserDto userPS) {
+		CompanyDetailRespDto companyDetailRespDto = new CompanyDetailRespDto();
+		List<NoticeRespDto> noticeRespDtoList = noticeDao.findByCompanyId(companyId);
+		for (int i = 0; i < noticeRespDtoList.size(); i++) {
+			noticeRespDtoList.get(i)
+					.setNeedSkill((needSkillDao.findByNoticeId(noticeRespDtoList.get(i).getNoticeId())));
+		}
+
+		companyDetailRespDto.InsertCompany(companyDao.findById(companyId));
+		companyDetailRespDto.setNoticeRespDtoList(noticeRespDtoList);
+		if (userPS != null) {
+			companyDetailRespDto.insertRecommend(
+					recommendDao.findAboutsubject(userPS.getUserId(), companyDetailRespDto.getUserId()));
+			companyDetailRespDto.setSubscribeId(
+					subscribeDao.findByUserIdAndSubjectId(userPS.getUserId(), companyDetailRespDto.getUserId()));
+		} else {
+			companyDetailRespDto.insertRecommend(recommendDao.findAboutsubject(null, companyDetailRespDto.getUserId()));
+		}
+		return companyDetailRespDto;
 	}
 
 	@Transactional

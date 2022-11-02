@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.user.User;
 import site.metacoding.miniproject.domain.user.UserDao;
+import site.metacoding.miniproject.dto.SessionUserDto;
 import site.metacoding.miniproject.dto.request.user.LoginReqDto;
 
 @RequiredArgsConstructor
@@ -14,14 +15,14 @@ public class UserService {
 	private final UserDao userDao;
 
 	@Transactional
-	public User 로그인(LoginReqDto loginDto) {
+	public SessionUserDto 로그인(LoginReqDto loginDto) {
 		User userPS = userDao.findByUsername(loginDto.getUsername());
 		if (userPS == null) {
 			return null;
 		}
 
 		if (userPS.getPassword().equals(loginDto.getPassword())) {
-			return userPS;
+			return new SessionUserDto(userPS);
 		}
 		return null;
 	}

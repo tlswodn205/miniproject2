@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.user.User;
+import site.metacoding.miniproject.dto.SessionUserDto;
 import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
 import site.metacoding.miniproject.dto.response.CMRespDto;
 import site.metacoding.miniproject.dto.response.resume.ResumeDetailFormRespDto;
@@ -34,7 +35,7 @@ public class ResumeController {
 	// 이력서 등록 페이지
 	@GetMapping("/person/resumeWriteForm")
 	public CMRespDto<?> resumeForm(Model model) {
-		User userPS = (User) session.getAttribute("principal"); // 로그인 정보 가져오기
+		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal"); // 로그인 정보 가져오기
 		Integer id = personService.개인번호갖고오기(userPS.getUserId()); // 구직자 개인번호 가져오기
 		ResumeFormRespDto personPS = personService.이력서내용가져오기(id); // 이력서내용가져오기
 		model.addAttribute("person", personPS);
@@ -102,7 +103,7 @@ public class ResumeController {
 	// 이력서 상세보기 페이지
 	@GetMapping("/person/resumeDetailForm/{resumeId}")
 	public CMRespDto<?> resumeDetailForm(Model model, @PathVariable Integer resumeId) {
-		User userPS = (User) session.getAttribute("principal");
+		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
 		ResumeDetailFormRespDto personPS2 = resumeService.이력서상세보기(resumeId);
 		ResumeFormRespDto personPS = personService.이력서내용가져오기(personPS2.getPersonId()); // 이력서내용가져오기
 		model.addAttribute("person", personPS);

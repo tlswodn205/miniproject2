@@ -111,17 +111,35 @@ public class PersonService {
 	}
 
 	@Transactional
-	public List<InterestPersonRespDto> 관심구직자리스트(List<Integer> personIdList) {
+	public List<InterestPersonRespDto> 관심구직자리스트(List<String> skillList) {
+		List<Integer> interesPersonIdList = new ArrayList<Integer>();
+
+		List<Person> personList = personDao.findAll();
+
+		for (int i = 0; i < personList.size(); i++) {
+			int count = 0;
+			int personId = personList.get(i).getPersonId();
+			for (int j = 0; j < skillList.size(); j++) {
+				if (personSkillDao.findBySkillAndPersonId(skillList.get(j), personId) == null) {
+					continue;
+				}
+				count++;
+			}
+			if (count >= skillList.size()) {
+				interesPersonIdList.add(personId);
+			}
+		}
+
 		List<InterestPersonRespDto> interestPersonDtoList = new ArrayList<InterestPersonRespDto>();
 		int count = 0;
 
-		for (int i = 0; i < personIdList.size(); i++) {
+		for (int i = 0; i < interesPersonIdList.size(); i++) {
 			count++;
-			Person person = personDao.findById(personIdList.get(i));
+			Person person = personDao.findById(interesPersonIdList.get(i));
 			RecommendDetailRespDto CompanyDetailRecomDto = recommendDao.findAboutsubject(null, person.getUserId());
 			InterestPersonRespDto interestPersonDto = new InterestPersonRespDto(person.getPersonId(), false,
 					CompanyDetailRecomDto.getRecommendCount(), person.getPersonName(), person.getCareer(),
-					person.getDegree(), person.getAddress(), personSkillDao.findByPersonId(personIdList.get(i)));
+					person.getDegree(), person.getAddress(), personSkillDao.findByPersonId(interesPersonIdList.get(i)));
 
 			interestPersonDtoList.add(interestPersonDto);
 			if (count >= 20) {
