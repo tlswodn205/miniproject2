@@ -103,12 +103,7 @@ public class ResumeController {
 	// 이력서 상세보기 페이지
 	@GetMapping("/person/resumeDetailForm/{resumeId}")
 	public CMRespDto<?> resumeDetailForm(Model model, @PathVariable Integer resumeId) {
-		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
 		ResumeDetailFormRespDto personPS2 = resumeService.이력서상세보기(resumeId);
-		ResumeFormRespDto personPS = personService.이력서내용가져오기(personPS2.getPersonId()); // 이력서내용가져오기
-		model.addAttribute("person", personPS);
-		model.addAttribute("person2", personPS2);
-		model.addAttribute("principal", userPS);
-		return new CMRespDto<>(1, "이력서 상세보기 페이지 불러오기 성공", null);
+		return new CMRespDto<>(1, "이력서 상세보기 페이지 불러오기 성공", personPS2);
 	}
 }
