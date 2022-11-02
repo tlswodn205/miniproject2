@@ -193,8 +193,7 @@ public class CompanyController {
 	@GetMapping("/company/noticeLoadForm")
 	public CMRespDto<?> noticeLoad(Model model) {
 		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
-		Company company = companyService.유저아이디로찾기(userPS.getUserId());
-		List<NoticeRespDto> noticeRespDtoList = companyService.CompanyId로공고불러오기(company.getCompanyId());
+		List<NoticeRespDto> noticeRespDtoList = companyService.유저아이디로공고불러오기(userPS.getUserId());
 		return new CMRespDto<>(1, "등록 공고 보기 페이지 불러오기 완료", noticeRespDtoList);
 	}
 

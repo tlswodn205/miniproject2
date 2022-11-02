@@ -71,6 +71,17 @@ public class CompanyService {
 	}
 
 	@Transactional
+	public List<NoticeRespDto> 유저아이디로공고불러오기(Integer userId) {
+		Company company = companyDao.findByUserId(userId);
+		List<NoticeRespDto> noticeRespDtoList = noticeDao.findByCompanyId(company.getCompanyId());
+		for (int i = 0; i < noticeRespDtoList.size(); i++) {
+			noticeRespDtoList.get(i)
+					.setNeedSkill((needSkillDao.findByNoticeId(noticeRespDtoList.get(i).getNoticeId())));
+		}
+		return noticeRespDtoList;
+	}
+
+	@Transactional
 	public Company 유저아이디로찾기(Integer userId) {
 		return companyDao.findByUserId(userId);
 	}
