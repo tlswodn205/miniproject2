@@ -56,10 +56,7 @@ public class CompanyService {
   }
 
   @Transactional
-  public CompanyInsertReqDto 기업이력등록(
-    Integer CompanyId,
-    CompanyInsertReqDto companyInsertDto
-  ) {
+  public CompanyInsertReqDto 기업이력등록(Integer CompanyId, CompanyInsertReqDto companyInsertDto) {
     companyInsertDto.setCompanyId(CompanyId);
     companyDao.updateCompanyIntroduction(companyInsertDto);
     return companyInsertDto;
@@ -68,10 +65,19 @@ public class CompanyService {
   @Transactional
   public CompanyIntroductionRespDto 기업이력가져오기(Integer userId) {
     Company company = companyDao.findByUserId(userId);
-    CompanyIntroductionRespDto companyIntroductionDto = new CompanyIntroductionRespDto(
-      company
-    );
+    CompanyIntroductionRespDto companyIntroductionDto = new CompanyIntroductionRespDto(company);
     return companyIntroductionDto;
+  }
+
+  @Transactional
+  public List<NoticeRespDto> 유저아이디로공고불러오기(Integer userId) {
+    Company company = companyDao.findByUserId(userId);
+    List<NoticeRespDto> noticeRespDtoList = noticeDao.findByCompanyId(company.getCompanyId());
+    for (int i = 0; i < noticeRespDtoList.size(); i++) {
+      noticeRespDtoList.get(i)
+          .setNeedSkill((needSkillDao.findByNoticeId(noticeRespDtoList.get(i).getNoticeId())));
+    }
+    return noticeRespDtoList;
   }
 
   @Transactional
@@ -84,9 +90,7 @@ public class CompanyService {
     List<CompanyRecommendRespDto> companyRecommendDtoList = companyDao.findToRecommned();
 
     for (int i = 0; i < companyRecommendDtoList.size(); i++) {
-      List<NeedSkill> needSkillList = needSkillDao.findByNoticeId(
-        companyRecommendDtoList.get(i).getNoticeId()
-      );
+      List<NeedSkill> needSkillList = needSkillDao.findByNoticeId(companyRecommendDtoList.get(i).getNoticeId());
       companyRecommendDtoList.get(i).setNeedSkillList(needSkillList);
     }
     return companyRecommendDtoList;
@@ -101,13 +105,7 @@ public class CompanyService {
       int count = 0;
       int count2 = 0;
       for (int j = 0; j < skillList.size(); j++) {
-        if (
-          needSkillDao.findBySkillAndNoticeId(
-            skillList.get(j),
-            noticeIds.get(i).getNoticeId()
-          ) !=
-          null
-        ) {
+        if (needSkillDao.findBySkillAndNoticeId(skillList.get(j), noticeIds.get(i).getNoticeId()) != null) {
           count++;
         }
       }
@@ -119,9 +117,7 @@ public class CompanyService {
   }
 
   @Transactional
-  public List<CompanyRecommendRespDto> NoticeId로공고불러오기(
-    List<String> skillList
-  ) {
+  public List<CompanyRecommendRespDto> NoticeId로공고불러오기(List<String> skillList) {
     List<Notice> noticeIds = noticeDao.findAll();
     List<Integer> noticeList = new ArrayList<>();
 
@@ -129,13 +125,7 @@ public class CompanyService {
       int count = 0;
       int count2 = 0;
       for (int j = 0; j < skillList.size(); j++) {
-        if (
-          needSkillDao.findBySkillAndNoticeId(
-            skillList.get(j),
-            noticeIds.get(i).getNoticeId()
-          ) !=
-          null
-        ) {
+        if (needSkillDao.findBySkillAndNoticeId(skillList.get(j), noticeIds.get(i).getNoticeId()) != null) {
           count++;
         }
       }
@@ -146,12 +136,8 @@ public class CompanyService {
 
     List<CompanyRecommendRespDto> companyRecommendDtoList = new ArrayList<>();
     for (int i = 0; i < noticeList.size(); i++) {
-      CompanyRecommendRespDto companyRecommendDto = companyDao.findToNoticeId(
-        noticeList.get(i)
-      );
-      companyRecommendDto.setNeedSkillList(
-        needSkillDao.findByNoticeId(noticeList.get(i))
-      );
+      CompanyRecommendRespDto companyRecommendDto = companyDao.findToNoticeId(noticeList.get(i));
+      companyRecommendDto.setNeedSkillList(needSkillDao.findByNoticeId(noticeList.get(i)));
       companyRecommendDtoList.add(companyRecommendDto);
       if (i >= 19) {
         break;
@@ -165,17 +151,9 @@ public class CompanyService {
     List<Subscribe> subscribeList = subscribeDao.findByUserId(userId);
     List<SubscribeRespDto> subscribeDtoList = new ArrayList<>();
     for (int i = 0; i < subscribeList.size(); i++) {
-      subscribeDtoList.add(
-        new SubscribeRespDto(
-          subscribeList.get(i).getSubscribeId(),
-          companyDao
-            .findByUserId(subscribeList.get(i).getSubjectId())
-            .getCompanyId(),
-          companyDao
-            .findByUserId(subscribeList.get(i).getSubjectId())
-            .getCompanyName()
-        )
-      );
+      subscribeDtoList.add(new SubscribeRespDto(subscribeList.get(i).getSubscribeId(),
+          companyDao.findByUserId(subscribeList.get(i).getSubjectId()).getCompanyId(),
+          companyDao.findByUserId(subscribeList.get(i).getSubjectId()).getCompanyName()));
     }
     return subscribeDtoList;
   }
@@ -183,8 +161,7 @@ public class CompanyService {
   @Transactional
   public SubscribeDeleteRespDto 구독취소(Integer subscribeId) {
     SubscribeDeleteRespDto subscribeDeleteRespDto = subscribeDao.SubscribeDeleteResult(
-      subscribeId
-    );
+        subscribeId);
     subscribeDao.deleteById(subscribeId);
     return subscribeDeleteRespDto;
   }
@@ -195,40 +172,32 @@ public class CompanyService {
   }
 
   public CompanyDetailRespDto 기업상세보기불러오기(
-    Integer companyId,
-    SessionUserDto userPS
-  ) {
+      Integer companyId,
+      SessionUserDto userPS) {
     CompanyDetailRespDto companyDetailRespDto = new CompanyDetailRespDto();
     List<NoticeRespDto> noticeRespDtoList = noticeDao.findByCompanyId(
-      companyId
-    );
+        companyId);
     for (int i = 0; i < noticeRespDtoList.size(); i++) {
       noticeRespDtoList
-        .get(i)
-        .setNeedSkill(
-          (needSkillDao.findByNoticeId(noticeRespDtoList.get(i).getNoticeId()))
-        );
+          .get(i)
+          .setNeedSkill(
+              (needSkillDao.findByNoticeId(noticeRespDtoList.get(i).getNoticeId())));
     }
 
     companyDetailRespDto.InsertCompany(companyDao.findById(companyId));
     companyDetailRespDto.setNoticeRespDtoList(noticeRespDtoList);
     if (userPS != null) {
       companyDetailRespDto.insertRecommend(
-        recommendDao.findAboutsubject(
-          userPS.getUserId(),
-          companyDetailRespDto.getUserId()
-        )
-      );
+          recommendDao.findAboutsubject(
+              userPS.getUserId(),
+              companyDetailRespDto.getUserId()));
       companyDetailRespDto.setSubscribeId(
-        subscribeDao.findByUserIdAndSubjectId(
-          userPS.getUserId(),
-          companyDetailRespDto.getUserId()
-        )
-      );
+          subscribeDao.findByUserIdAndSubjectId(
+              userPS.getUserId(),
+              companyDetailRespDto.getUserId()));
     } else {
       companyDetailRespDto.insertRecommend(
-        recommendDao.findAboutsubject(null, companyDetailRespDto.getUserId())
-      );
+          recommendDao.findAboutsubject(null, companyDetailRespDto.getUserId()));
     }
     return companyDetailRespDto;
   }
@@ -236,23 +205,20 @@ public class CompanyService {
   @Transactional
   public List<NoticeRespDto> CompanyId로공고불러오기(Integer companyId) {
     List<NoticeRespDto> noticeRespDtoList = noticeDao.findByCompanyId(
-      companyId
-    );
+        companyId);
     for (int i = 0; i < noticeRespDtoList.size(); i++) {
       noticeRespDtoList
-        .get(i)
-        .setNeedSkill(
-          (needSkillDao.findByNoticeId(noticeRespDtoList.get(i).getNoticeId()))
-        );
+          .get(i)
+          .setNeedSkill(
+              (needSkillDao.findByNoticeId(noticeRespDtoList.get(i).getNoticeId())));
     }
     return noticeRespDtoList;
   }
 
   @Transactional
   public RecommendDetailRespDto 기업추천불러오기(
-    Integer userId,
-    Integer subjectId
-  ) {
+      Integer userId,
+      Integer subjectId) {
     return recommendDao.findAboutsubject(userId, subjectId);
   }
 
@@ -284,11 +250,9 @@ public class CompanyService {
     noticeDao.insert(noticeInsertDto.toNotice());
     for (int i = 0; i < noticeInsertDto.getNeedSkill().size(); i++) {
       needSkillDao.insert(
-        noticeInsertDto.toNeedSkill(
-          noticeDao.findRecentNoticeId(noticeInsertDto.getCompanyId()),
-          i
-        )
-      );
+          noticeInsertDto.toNeedSkill(
+              noticeDao.findRecentNoticeId(noticeInsertDto.getCompanyId()),
+              i));
     }
   }
 
@@ -300,21 +264,17 @@ public class CompanyService {
   // 기업 마이페이지 정보 보기 id, dto(password,email ...)
   @Transactional
   public CompanyMyPageRespDto 기업마이페이지정보보기(Integer userId) {
-    CompanyMyPageRespDto companyMyPageRespDtoPS = companyDao.findToCompanyMyPage(
-      userId
-    );
+    CompanyMyPageRespDto companyMyPageRespDtoPS = companyDao.findToCompanyMyPage(userId);
     return companyMyPageRespDtoPS;
   }
 
   @Transactional
   public CompanyMyPageUpdateRespDto 기업회원정보수정(
-    CompanyMyPageUpdateReqDto companyMyPageUpdateReqDto
-  ) {
+      CompanyMyPageUpdateReqDto companyMyPageUpdateReqDto) {
     companyDao.updateToCompany(companyMyPageUpdateReqDto);
     userDao.updateToUser(companyMyPageUpdateReqDto);
     CompanyMyPageUpdateRespDto companyMyPageUpdateRespDto = companyDao.CompanyMyPageUpdateResult(
-      companyMyPageUpdateReqDto.getUserId()
-    );
+        companyMyPageUpdateReqDto.getUserId());
     return companyMyPageUpdateRespDto;
   }
 

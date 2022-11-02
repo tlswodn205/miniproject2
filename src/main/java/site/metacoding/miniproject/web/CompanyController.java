@@ -197,132 +197,79 @@ public class CompanyController {
     );
     return new CMRespDto<>(1, "구독 취소", subscribeDeleteRespDto);
   }
+	@GetMapping("/company/companyDetailForm/{companyId}")
+	public CMRespDto<?> companyDetail(@PathVariable Integer companyId, Model model) {
+		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
+		CompanyDetailRespDto companyDetailRespDto = companyService.기업상세보기불러오기(companyId, userPS);
 
-  @GetMapping("/company/companyDetailForm/{companyId}")
-  public CMRespDto<?> companyDetail(
-    @PathVariable Integer companyId,
-    Model model
-  ) {
-    SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
-    CompanyDetailRespDto companyDetailRespDto = companyService.기업상세보기불러오기(
-      companyId,
-      userPS
-    );
+		return new CMRespDto<>(1, "기업 상세보기 페이지 불러오기 완료", companyDetailRespDto);
+	}
 
-    return new CMRespDto<>(
-      1,
-      "기업 상세보기 페이지 불러오기 완료",
-      companyDetailRespDto
-    );
-  }
+	@PostMapping("/company/subscribe/{subjectId}")
+	public CMRespDto<Integer> companySubscribe(@PathVariable Integer subjectId, Model model) {
+		SessionUserDto principal = (SessionUserDto) session.getAttribute("principal");
+		Integer subscribeId = companyService.구독Id불러오기(principal.getUserId(), subjectId);
+		if (subscribeId == null) {
+			companyService.구독하기(principal.getUserId(), subjectId);
+			subscribeId = companyService.구독Id불러오기(principal.getUserId(), subjectId);
+			return new CMRespDto<Integer>(1, "구독 완료", subscribeId);
+		}
+		companyService.구독취소(subscribeId);
+		return new CMRespDto<Integer>(1, "구독 취소 완료", null);
+	}
 
-  @PostMapping("/company/subscribe/{subjectId}")
-  public CMRespDto<Integer> companySubscribe(
-    @PathVariable Integer subjectId,
-    Model model
-  ) {
-    SessionUserDto principal = (SessionUserDto) session.getAttribute(
-      "principal"
-    );
-    Integer subscribeId = companyService.구독Id불러오기(
-      principal.getUserId(),
-      subjectId
-    );
-    if (subscribeId == null) {
-      companyService.구독하기(principal.getUserId(), subjectId);
-      subscribeId =
-        companyService.구독Id불러오기(principal.getUserId(), subjectId);
-      return new CMRespDto<Integer>(1, "구독 완료", subscribeId);
-    }
-    companyService.구독취소(subscribeId);
-    return new CMRespDto<Integer>(1, "구독 취소 완료", null);
-  }
+	@PostMapping("/company/recommend/{subjectId}")
+	public CMRespDto<RecommendDetailRespDto> companyRecommend(@PathVariable Integer subjectId) {
+		SessionUserDto principal = (SessionUserDto) session.getAttribute("principal");
+		RecommendDetailRespDto recommendDetail = companyService.기업추천불러오기(principal.getUserId(), subjectId);
+		if (recommendDetail.getRecommendId() == null) {
+			companyService.기업추천하기(principal.getUserId(), subjectId);
+			recommendDetail = companyService.기업추천불러오기(principal.getUserId(), subjectId);
+			return new CMRespDto<RecommendDetailRespDto>(1, "추천 완료", recommendDetail);
+		}
+		companyService.기업추천취소(recommendDetail.getRecommendId());
+		recommendDetail = companyService.기업추천불러오기(principal.getUserId(), subjectId);
+		return new CMRespDto<RecommendDetailRespDto>(1, "추천 취소 완료", recommendDetail);
+	}
 
-  @PostMapping("/company/recommend/{subjectId}")
-  public CMRespDto<RecommendDetailRespDto> companyRecommend(
-    @PathVariable Integer subjectId
-  ) {
-    SessionUserDto principal = (SessionUserDto) session.getAttribute(
-      "principal"
-    );
-    RecommendDetailRespDto recommendDetail = companyService.기업추천불러오기(
-      principal.getUserId(),
-      subjectId
-    );
-    if (recommendDetail.getRecommendId() == null) {
-      companyService.기업추천하기(principal.getUserId(), subjectId);
-      recommendDetail =
-        companyService.기업추천불러오기(principal.getUserId(), subjectId);
-      return new CMRespDto<RecommendDetailRespDto>(
-        1,
-        "추천 완료",
-        recommendDetail
-      );
-    }
-    companyService.기업추천취소(recommendDetail.getRecommendId());
-    recommendDetail =
-      companyService.기업추천불러오기(principal.getUserId(), subjectId);
-    return new CMRespDto<RecommendDetailRespDto>(
-      1,
-      "추천 취소 완료",
-      recommendDetail
-    );
-  }
+	@GetMapping("/company/noticeLoadForm")
+	public CMRespDto<?> noticeLoad(Model model) {
+		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
+		List<NoticeRespDto> noticeRespDtoList = companyService.유저아이디로공고불러오기(userPS.getUserId());
+		return new CMRespDto<>(1, "등록 공고 보기 페이지 불러오기 완료", noticeRespDtoList);
+	}
 
-  @GetMapping("/company/noticeLoadForm")
-  public CMRespDto<?> noticeLoad(Model model) {
-    SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
-    Company company = companyService.유저아이디로찾기(userPS.getUserId());
-    List<NoticeRespDto> noticeRespDtoList = companyService.CompanyId로공고불러오기(
-      company.getCompanyId()
-    );
-    return new CMRespDto<>(
-      1,
-      "등록 공고 보기 페이지 불러오기 완료",
-      noticeRespDtoList
-    );
-  }
+	@GetMapping("/company/noticeWriteForm")
+	public CMRespDto<?> noticeWrite(Model model) {
+		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
+		Company company = companyService.유저아이디로찾기(userPS.getUserId());
+		return new CMRespDto<>(1, "공고 등록하기 페이지 불러오기 완료", company);
+	}
 
-  @GetMapping("/company/noticeWriteForm")
-  public CMRespDto<?> noticeWrite(Model model) {
-    SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
-    Company company = companyService.유저아이디로찾기(userPS.getUserId());
-    return new CMRespDto<>(1, "공고 등록하기 페이지 불러오기 완료", company);
-  }
+	@PostMapping("/company/noticeInsert")
+	public CMRespDto<?> noticeInsert(@RequestBody NoticeInsertReqDto noticeInsertDto) {
+		companyService.공고등록하기(noticeInsertDto);
+		return new CMRespDto<>(1, "공고 등록 완료", null);
+	}
 
-  @PostMapping("/company/noticeInsert")
-  public CMRespDto<?> noticeInsert(
-    @RequestBody NoticeInsertReqDto noticeInsertDto
-  ) {
-    companyService.공고등록하기(noticeInsertDto);
-    return new CMRespDto<>(1, "공고 등록 완료", null);
-  }
+	@GetMapping("/company/noticeDetailForm/{noticeId}")
+	public CMRespDto<?> noticeDetail(@PathVariable Integer noticeId, Model model) {
+		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
+		Notice notice = personService.공고하나불러오기(noticeId);
+		List<NeedSkill> needSkillList = companyService.noticeId로필요기술들고오기(noticeId);
+		Company company = companyService.유저아이디로찾기(noticeId);
+		List<Resume> resumeList = personService.이력서목록가져오기(userPS.getUserId());
+		model.addAttribute("notice", notice);
+		model.addAttribute("company", company);
+		model.addAttribute("needSkillList", needSkillList);
+		model.addAttribute("resumeList", resumeList);
+		return new CMRespDto<>(1, "공고 상세보기 페이지 불러오기 완료", null);
+	}
 
-  @GetMapping("/company/noticeDetailForm/{noticeId}")
-  public CMRespDto<?> noticeDetail(
-    @PathVariable Integer noticeId,
-    Model model
-  ) {
-    SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
-    Notice notice = personService.공고하나불러오기(noticeId);
-    List<NeedSkill> needSkillList = companyService.noticeId로필요기술들고오기(
-      noticeId
-    );
-    Company company = companyService.유저아이디로찾기(noticeId);
-    List<Resume> resumeList = personService.이력서목록가져오기(
-      userPS.getUserId()
-    );
-    model.addAttribute("notice", notice);
-    model.addAttribute("company", company);
-    model.addAttribute("needSkillList", needSkillList);
-    model.addAttribute("resumeList", resumeList);
-    return new CMRespDto<>(1, "공고 상세보기 페이지 불러오기 완료", null);
-  }
-
-  @GetMapping("/company/companyDetail")
-  public String myCompanyDetail(Model model) {
-    SessionUserDto user = (SessionUserDto) session.getAttribute("principal");
-    Company company = companyService.유저아이디로찾기(user.getUserId());
-    return "redirect:/company/companyDetail/" + company.getCompanyId();
-  }
+	@GetMapping("/company/companyDetail")
+	public String myCompanyDetail(Model model) {
+		SessionUserDto user = (SessionUserDto) session.getAttribute("principal");
+		Company company = companyService.유저아이디로찾기(user.getUserId());
+		return "redirect:/company/companyDetail/" + company.getCompanyId();
+	}
 }

@@ -3,6 +3,7 @@ package site.metacoding.miniproject.domain.resume;
 import java.util.List;
 
 import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
+import site.metacoding.miniproject.dto.response.resume.ResumeWriteRespDto;
 
 public interface ResumeDao {
 
@@ -19,4 +20,6 @@ public interface ResumeDao {
 	public void deleteById(Integer resumeId);
 
 	public List<Resume> findByPersonId(Integer personId);
+
+	public ResumeWriteRespDto resumeWriteResult(Integer personId);
 }

@@ -28,6 +28,7 @@ import site.metacoding.miniproject.dto.request.person.PersonMyPageReqDto;
 import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateReqDto;
 import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
 import site.metacoding.miniproject.dto.response.notice.AppliersRespDto;
+import site.metacoding.miniproject.dto.response.notice.FindNoticePerApplierRespDto;
 import site.metacoding.miniproject.dto.response.notice.NoticeApplyRespDto;
 import site.metacoding.miniproject.dto.response.person.InterestPersonRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonInfoRespDto;
@@ -35,6 +36,7 @@ import site.metacoding.miniproject.dto.response.person.PersonJoinRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto;
 import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
 import site.metacoding.miniproject.dto.response.resume.ResumeFormRespDto;
+import site.metacoding.miniproject.dto.response.resume.ResumeWriteRespDto;
 
 @RequiredArgsConstructor
 @Service
@@ -68,9 +70,7 @@ public class PersonService {
 	@Transactional
 	public ResumeFormRespDto 이력서내용가져오기(Integer personId) {
 		Person person = personDao.findById(personId);
-		ResumeFormRespDto resumeFormDto = new ResumeFormRespDto(personId, person.getUserId(), person.getPersonName(),
-				person.getPersonEmail(),
-				person.getDegree(), person.getAddress(), person.getCareer(), personSkillDao.findByPersonId(personId));
+		ResumeFormRespDto resumeFormDto = new ResumeFormRespDto(person, personSkillDao.findByPersonId(personId));
 		return resumeFormDto;
 	}
 
@@ -151,9 +151,11 @@ public class PersonService {
 	}
 
 	@Transactional
-	public void 이력서등록(ResumeWriteReqDto resumeWriteDto, Integer personId) {
+	public ResumeWriteRespDto 이력서등록(ResumeWriteReqDto resumeWriteDto, Integer personId) {
 		Resume resume = resumeWriteDto.toEntity(personId);
 		resumeDao.insert(resume);
+		ResumeWriteRespDto resumeWriteRespDto = resumeDao.resumeWriteResult(personId);
+		return resumeWriteRespDto;
 	}
 
 	@Transactional
@@ -255,6 +257,25 @@ public class PersonService {
 	@Transactional
 	public Notice 공고하나불러오기(int noticeId) {
 		return noticeDao.findById(noticeId);
+	}
+
+	@Transactional
+	public FindNoticePerApplierRespDto 공고별구직자리스트(Integer noticeId) {
+		FindNoticePerApplierRespDto findNoticePerApplierRespDto = new FindNoticePerApplierRespDto(
+				noticeDao.findById(noticeId));
+		List<SubmitResume> submitResumedList = submitResumeDao.findByNoticeId(noticeId);
+		List<AppliersRespDto> appliersDtoList = new ArrayList<>();
+		for (int i = 0; i < submitResumedList.size(); i++) {
+			Integer personId = resumeDao.findById(submitResumedList.get(i).getResumeId()).getPersonId();
+			Person person = personDao.findById(personId);
+			personDao.findById(personId);
+			List<String> personSkillList = personSkillDao.findByPersonId(personId);
+			appliersDtoList
+					.add(new AppliersRespDto(submitResumedList.get(i).getResumeId(), personId, person.getPersonName(),
+							person.getCareer(), personSkillList, submitResumedList.get(i).getCreatedAt()));
+		}
+		findNoticePerApplierRespDto.setAppliersDtoList(appliersDtoList);
+		return findNoticePerApplierRespDto;
 	}
 
 	@Transactional
