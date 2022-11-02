@@ -5,9 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.UUID;
-
 import javax.servlet.http.HttpSession;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.need_skill.NeedSkill;
 import site.metacoding.miniproject.domain.notice.Notice;
@@ -200,7 +197,6 @@ public class CompanyController {
     );
     return new CMRespDto<>(1, "구독 취소", subscribeDeleteRespDto);
   }
-
 	@GetMapping("/company/companyDetailForm/{companyId}")
 	public CMRespDto<?> companyDetail(@PathVariable Integer companyId, Model model) {
 		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
