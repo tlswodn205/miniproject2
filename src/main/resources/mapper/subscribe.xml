@@ -36,4 +36,10 @@
     FROM subscribe
     WHERE user_id = #{userId} and subject_id = #{subjectId}
   </select>
+
+  <select id="SubscribeDeleteResult" resultType="site.metacoding.miniproject.dto.response.subscribe.SubscribeDeleteRespDto">
+    select * 
+    FROM subscribe
+    WHERE subscribe_Id = #{subscribeId}
+  </select>
 </mapper>
