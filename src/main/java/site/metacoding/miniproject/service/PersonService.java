@@ -69,9 +69,7 @@ public class PersonService {
 	@Transactional
 	public ResumeFormRespDto 이력서내용가져오기(Integer personId) {
 		Person person = personDao.findById(personId);
-		ResumeFormRespDto resumeFormDto = new ResumeFormRespDto(personId, person.getUserId(), person.getPersonName(),
-				person.getPersonEmail(),
-				person.getDegree(), person.getAddress(), person.getCareer(), personSkillDao.findByPersonId(personId));
+		ResumeFormRespDto resumeFormDto = new ResumeFormRespDto(person, personSkillDao.findByPersonId(personId));
 		return resumeFormDto;
 	}
 
