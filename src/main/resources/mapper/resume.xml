@@ -38,4 +38,12 @@
     FROM resume
     WHERE person_id = #{personId}
   </select>
+
+  <select id="resumeWriteResult" resultType="site.metacoding.miniproject.dto.response.resume.ResumeWriteRespDto">
+    select *
+    from resume
+    where person_id = #{personId}
+    order by created_At desc
+		FETCH NEXT 1 ROWS ONLY
+  </select>
 </mapper>

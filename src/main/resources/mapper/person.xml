@@ -122,6 +122,6 @@
 		on p.user_Id = u.user_id
 		WHERE p.user_id = #{userId}
 	</select>
-
+	
 
 </mapper>

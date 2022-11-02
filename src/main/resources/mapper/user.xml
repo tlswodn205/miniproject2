@@ -49,4 +49,13 @@
   DELETE FROM user
   WHERE user_id = #{userId}
   </delete>
+
+  <select id="userIdDeleteResult" 
+  resultType="site.metacoding.miniproject.dto.response.person.UserIdDeleteRespDto">
+	SELECT *
+	FROM user
+	WHERE user_id = #{userId}
+</select>
+
+
 </mapper>

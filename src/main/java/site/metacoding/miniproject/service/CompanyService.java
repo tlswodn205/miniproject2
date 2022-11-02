@@ -274,8 +274,7 @@ public class CompanyService {
   // 기업 마이페이지 정보 보기 id, dto(password,email ...)
   @Transactional
   public CompanyMyPageRespDto 기업마이페이지정보보기(Integer userId) {
-    CompanyMyPageRespDto companyMyPageRespDtoPS = companyDao.findToCompanyMyPage(
-        userId);
+    CompanyMyPageRespDto companyMyPageRespDtoPS = companyDao.findToCompanyMyPage(userId);
     return companyMyPageRespDtoPS;
   }
 
