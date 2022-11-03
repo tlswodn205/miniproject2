@@ -6,12 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.notice.Notice;
+import site.metacoding.miniproject.domain.resume.Resume;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class FindNoticePerApplierRespDto {
-
+public class NoticeDetailRespDto {
     private Integer noticeId;
     private Integer companyId;
     private String noticeTitle;
@@ -20,9 +20,10 @@ public class FindNoticePerApplierRespDto {
     private String degree;
     private Integer career;
     private String noticeContent;
-    private List<AppliersRespDto> appliersDtoList;
+    private List<String> needSkillList;
+    private List<Resume> ResumeList;
 
-    public FindNoticePerApplierRespDto(Notice notice) {
+    public NoticeDetailRespDto(Notice notice) {
         this.noticeId = notice.getNoticeId();
         this.companyId = notice.getCompanyId();
         this.noticeTitle = notice.getNoticeTitle();

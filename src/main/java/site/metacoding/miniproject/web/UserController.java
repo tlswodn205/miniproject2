@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import site.metacoding.miniproject.domain.user.User;
 import site.metacoding.miniproject.dto.SessionUserDto;
 import site.metacoding.miniproject.dto.request.user.LoginReqDto;
 import site.metacoding.miniproject.dto.response.CMRespDto;

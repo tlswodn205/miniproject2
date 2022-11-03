@@ -15,6 +15,6 @@ public class NoticeRespDto {
 	private String salary;
 	private String degree;
 	private boolean isClosed;
-	private List<NeedSkill> needSkill;
+	private List<String> needSkill;
 	private Timestamp createdAt;
 }

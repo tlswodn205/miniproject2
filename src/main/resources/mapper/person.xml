@@ -122,6 +122,11 @@
 		on p.user_Id = u.user_id
 		WHERE p.user_id = #{userId}
 	</select>
-	
 
+
+	<select id="personMyPageUpdateResult" resultType="site.metacoding.miniproject.dto.response.person.PersonMyPageUpdateRespDto">
+		SELECT *
+		FROM person
+		WHERE user_id = #{userId}
+	</select>
 </mapper>

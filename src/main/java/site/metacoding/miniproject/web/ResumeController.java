@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
-import site.metacoding.miniproject.domain.user.User;
 import site.metacoding.miniproject.dto.SessionUserDto;
 import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
 import site.metacoding.miniproject.dto.response.CMRespDto;
@@ -36,12 +35,8 @@ public class ResumeController {
 	@GetMapping("/person/resumeWriteForm")
 	public CMRespDto<?> resumeForm(Model model) {
 		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal"); // 로그인 정보 가져오기
-		Integer id = personService.개인번호갖고오기(userPS.getUserId()); // 구직자 개인번호 가져오기
-		ResumeFormRespDto personPS = personService.이력서내용가져오기(id); // 이력서내용가져오기
-		model.addAttribute("person", personPS);
-		model.addAttribute("user", userPS);
-		model.addAttribute("id", id);
-		return new CMRespDto<>(1, "이력서 쓰기 페이지 불러오기 성공", null);
+		ResumeFormRespDto resumeFormRespDto = personService.이력서내용가져오기(userPS.getUserId()); // 이력서내용가져오기
+		return new CMRespDto<>(1, "이력서 쓰기 페이지 불러오기 성공", resumeFormRespDto);
 	}
 
 	@PostMapping(value = "/resume/save")

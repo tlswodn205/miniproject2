@@ -1,5 +1,7 @@
 package site.metacoding.miniproject.dto.response.person;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -9,7 +11,7 @@ import lombok.Setter;
 @Getter
 public class PersonMyPageUpdateRespDto {
 	private Integer userId;
-	private String password;
+	private Integer personId;
 	private String personName;
 	private String personPhone;
 	private String isGender;
@@ -17,5 +19,5 @@ public class PersonMyPageUpdateRespDto {
 	private String degree;
 	private Integer career;
 	private String personEmail;
-	/* private List<PersonSkill> skill; */
+	private List<String> skill;
 }

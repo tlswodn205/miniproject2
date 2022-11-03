@@ -3,17 +3,17 @@ package site.metacoding.miniproject.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.websocket.Session;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import site.metacoding.miniproject.domain.company.CompanyDao;
 import site.metacoding.miniproject.domain.need_skill.NeedSkillDao;
 import site.metacoding.miniproject.domain.notice.Notice;
 import site.metacoding.miniproject.domain.notice.NoticeDao;
 import site.metacoding.miniproject.domain.person.Person;
 import site.metacoding.miniproject.domain.person.PersonDao;
-import site.metacoding.miniproject.domain.person_skill.PersonSkill;
 import site.metacoding.miniproject.domain.person_skill.PersonSkillDao;
 import site.metacoding.miniproject.domain.recommend.Recommend;
 import site.metacoding.miniproject.domain.recommend.RecommendDao;
@@ -23,16 +23,20 @@ import site.metacoding.miniproject.domain.submit_resume.SubmitResume;
 import site.metacoding.miniproject.domain.submit_resume.SubmitResumeDao;
 import site.metacoding.miniproject.domain.user.User;
 import site.metacoding.miniproject.domain.user.UserDao;
+import site.metacoding.miniproject.dto.SessionUserDto;
 import site.metacoding.miniproject.dto.request.person.PersonJoinReqDto;
-import site.metacoding.miniproject.dto.request.person.PersonMyPageReqDto;
 import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateReqDto;
 import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
 import site.metacoding.miniproject.dto.response.notice.AppliersRespDto;
+import site.metacoding.miniproject.dto.response.notice.CloseNoticeRespDto;
 import site.metacoding.miniproject.dto.response.notice.FindNoticePerApplierRespDto;
 import site.metacoding.miniproject.dto.response.notice.NoticeApplyRespDto;
+import site.metacoding.miniproject.dto.response.notice.NoticeDetailRespDto;
 import site.metacoding.miniproject.dto.response.person.InterestPersonRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonInfoRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonJoinRespDto;
+import site.metacoding.miniproject.dto.response.person.PersonMyPageRespDto;
+import site.metacoding.miniproject.dto.response.person.PersonMyPageUpdateRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto;
 import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
 import site.metacoding.miniproject.dto.response.resume.ResumeFormRespDto;
@@ -68,7 +72,8 @@ public class PersonService {
 	}
 
 	@Transactional
-	public ResumeFormRespDto 이력서내용가져오기(Integer personId) {
+	public ResumeFormRespDto 이력서내용가져오기(Integer userId) {
+		Integer personId = personDao.findToId(userId);
 		Person person = personDao.findById(personId);
 		ResumeFormRespDto resumeFormDto = new ResumeFormRespDto(person, personSkillDao.findByPersonId(personId));
 		return resumeFormDto;
@@ -164,46 +169,73 @@ public class PersonService {
 	}
 
 	@Transactional
-	public List<PersonInfoRespDto> 개인정보보기(Integer personId) {
-		return personDao.personInfo(personId);
+	public PersonInfoRespDto 개인정보보기(Integer personId, SessionUserDto userPS) {
+		PersonInfoRespDto personInfoRespDto = personDao.personInfo(personId);
+		personInfoRespDto.setSkill(personSkillDao.findByPersonId(personId));
+		if (userPS == null) {
+			personInfoRespDto
+					.insertRecommend(recommendDao.findAboutsubject(null, personInfoRespDto.getUserId()));
+		} else {
+			personInfoRespDto
+					.insertRecommend(recommendDao.findAboutsubject(userPS.getUserId(), personInfoRespDto.getUserId()));
+		}
+		return personInfoRespDto;
 	}
 
 	@Transactional
-	public List<PersonInfoRespDto> 개인기술보기(Integer personId) {
-		return personSkillDao.personSkillInfo(personId);
-	}
-
-	@Transactional
-	public List<PersonRecommendListRespDto> 구직자추천리스트보기() {
+	public List<PersonRecommendListRespDto> 구직자추천리스트보기(SessionUserDto userPS) {
 		List<PersonRecommendListRespDto> personRecommendListDto = personDao.findToPersonRecommned();
 		for (int i = 0; i < personRecommendListDto.size(); i++) {
 			Integer personId = personRecommendListDto.get(i).getPersonId();
 			personRecommendListDto.get(i).setSkill(personSkillDao.findByPersonId(personId));
 		}
+
+		if (userPS != null) {
+			List<String> skillList = needSkillDao.findByUserId(userPS.getUserId());
+			if (skillList != null) {
+				for (int i = 0; i < personRecommendListDto.size(); i++) {
+					int count = 0;
+					List<String> personSkillList = personSkillDao
+							.findByPersonId(personRecommendListDto.get(i).getPersonId());
+					for (int j = 0; j < personSkillList.size(); j++) {
+						for (int j2 = 0; j2 < skillList.size(); j2++) {
+							if (personSkillList.get(j).equals(skillList.get(j2))) {
+								count++;
+							}
+						}
+					}
+					if (skillList.size() * 0.7999999999 <= count) {
+						personRecommendListDto.get(i).setMark(true);
+					}
+				}
+			}
+		}
+
 		return personRecommendListDto;
 	}
 
 	// 구직자 마이페이지 정보 보기
 	@Transactional
-	public PersonMyPageReqDto 구직자마이페이지정보보기(Integer userId) {
-		PersonMyPageReqDto personMyPageDtoPs = personDao.findToPersonMyPage(userId);
+	public PersonMyPageRespDto 구직자마이페이지정보보기(Integer userId) {
+		PersonMyPageRespDto personMyPageDtoPs = personDao.findToPersonMyPage(userId);
 		return personMyPageDtoPs;
 
 	}
 
 	// 구직자 마이페이지 정보 수정
 	@Transactional
-	public void 구직자회원정보수정(PersonMyPageUpdateReqDto personMyPageUpdateDto) {
-		personDao.updateToPerson(personMyPageUpdateDto);
-		userDao.updateToUser(personMyPageUpdateDto);
+	public PersonMyPageUpdateRespDto 구직자회원정보수정(PersonMyPageUpdateReqDto PersonMyPageUpdateReqDto) {
+		personDao.updateToPerson(PersonMyPageUpdateReqDto);
+		userDao.updateToUser(PersonMyPageUpdateReqDto);
+		PersonMyPageUpdateRespDto personMyPageUpdateRespDto = personDao
+				.personMyPageUpdateResult(PersonMyPageUpdateReqDto.getUserId());
+		personMyPageUpdateRespDto.setSkill(personSkillDao.findByPersonId(personMyPageUpdateRespDto.getPersonId()));
+		return personDao.personMyPageUpdateResult(PersonMyPageUpdateReqDto.getUserId());
 	}
 
 	@Transactional
 	public List<Resume> 이력서목록가져오기(Integer userId) {
 		List<Resume> resumeList = resumeDao.findByPersonId(personDao.findToId(userId));
-		if (resumeList.size() == 0) {
-			return null;
-		}
 		return resumeList;
 	}
 
@@ -255,8 +287,13 @@ public class PersonService {
 	}
 
 	@Transactional
-	public Notice 공고하나불러오기(int noticeId) {
-		return noticeDao.findById(noticeId);
+	public NoticeDetailRespDto 공고하나불러오기(int noticeId, SessionUserDto userPS) {
+		NoticeDetailRespDto noticeDetailRespDto = new NoticeDetailRespDto(noticeDao.findById(noticeId));
+		noticeDetailRespDto.setNeedSkillList(needSkillDao.findByNoticeId(noticeId));
+		if (userPS != null) {
+			noticeDetailRespDto.setResumeList(resumeDao.findByPersonId(personDao.findToId(userPS.getUserId())));
+		}
+		return noticeDetailRespDto;
 	}
 
 	@Transactional
@@ -279,20 +316,25 @@ public class PersonService {
 	}
 
 	@Transactional
-	public void 공고마감하기(Integer noticeId) {
+	public CloseNoticeRespDto 공고마감하기(Integer noticeId) {
 		noticeDao.closeNotice(noticeId, true);
-
+		CloseNoticeRespDto closeNoticeRespDto = noticeDao.closeNoticeResult(noticeId);
+		return closeNoticeRespDto;
 	}
 
 	@Transactional
 	public List<NoticeApplyRespDto> 지원공고목록(Integer userId) {
-		return noticeDao.findNoticeApply(userId);
+		List<NoticeApplyRespDto> noticeApplyDtoList = noticeDao.findNoticeApply(userId);
+		for (int i = 0; i < noticeApplyDtoList.size(); i++) {
+			noticeApplyDtoList.get(i)
+					.setNeedSkillList(needSkillDao.findByNoticeId(noticeApplyDtoList.get(i).getNoticeId()));
+		}
+		return noticeApplyDtoList;
 	}
 
 	@Transactional
 	public List<String> 유저아이디로마감임박공고의기술스택찾기(Integer userId) {
 		List<String> skillList = needSkillDao.findByUserId(userId);
-		System.out.println(skillList.get(0));
 		return skillList;
 	}
 

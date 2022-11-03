@@ -22,6 +22,4 @@ public interface PersonSkillDao {
 	public Integer findBySkillAndPersonId(@Param("skill") String skill, @Param("personId") Integer personId);
 
 	public List<String> findByPersonId(Integer personId);
-
-	public List<PersonInfoRespDto> personSkillInfo(Integer personId);
 }

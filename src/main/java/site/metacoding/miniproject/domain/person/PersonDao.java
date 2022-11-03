@@ -6,6 +6,8 @@ import site.metacoding.miniproject.dto.request.person.PersonMyPageReqDto;
 import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateReqDto;
 import site.metacoding.miniproject.dto.response.person.PersonInfoRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonJoinRespDto;
+import site.metacoding.miniproject.dto.response.person.PersonMyPageRespDto;
+import site.metacoding.miniproject.dto.response.person.PersonMyPageUpdateRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto;
 
 public interface PersonDao {
@@ -13,7 +15,7 @@ public interface PersonDao {
 
 	public Person findById(Integer personId);
 
-	public List<PersonInfoRespDto> personInfo(Integer personId);
+	public PersonInfoRespDto personInfo(Integer personId);
 
 	public List<Person> findAll();
 
@@ -29,9 +31,9 @@ public interface PersonDao {
 
 	public List<PersonRecommendListRespDto> findToPersonRecommned();
 
-	public PersonMyPageReqDto findToPersonMyPage(Integer userId);
+	public PersonMyPageRespDto findToPersonMyPage(Integer userId);
 
 	public void updateToPerson(PersonMyPageUpdateReqDto personMyPageUpdateDto);
 
-	public PersonJoinRespDto personJoinResult(Integer userId);
+	public PersonMyPageUpdateRespDto personMyPageUpdateResult(Integer userId);
 }

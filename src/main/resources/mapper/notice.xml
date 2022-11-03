@@ -66,4 +66,21 @@
     INNER JOIN company c
 		ON cn.company_id = c.company_id 
 	</select>
+
+
+  <select id="noticeInsertResult" resultType="site.metacoding.miniproject.dto.response.notice.NoticeInsertRespDto">
+    select *
+    from notice
+    where company_id = #{companyId}
+    order by created_At desc
+		FETCH NEXT 1 ROWS ONLY
+  </select>
+
+
+  <select id="closeNoticeResult">
+      select *
+      from notice
+      where notice_id = #{noticeId}
+    </select>
+
 </mapper>

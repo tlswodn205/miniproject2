@@ -6,7 +6,6 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.domain.need_skill.NeedSkill;
 
 @Setter
 @Getter
@@ -23,5 +22,5 @@ public class CompanyRecommendRespDto {
 	private String degree;
 	private String salary;
 	private Timestamp createdAt;
-	private List<NeedSkill> needSkillList;
+	private List<String> needSkillList;
 }

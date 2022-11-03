@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.miniproject.domain.person_skill.PersonSkill;
 
 @NoArgsConstructor
 @AllArgsConstructor

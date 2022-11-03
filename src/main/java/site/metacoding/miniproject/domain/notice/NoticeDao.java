@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import site.metacoding.miniproject.dto.response.notice.CloseNoticeRespDto;
 import site.metacoding.miniproject.dto.response.notice.NoticeApplyRespDto;
+import site.metacoding.miniproject.dto.response.notice.NoticeInsertRespDto;
 import site.metacoding.miniproject.dto.response.notice.NoticeRespDto;
 
 public interface NoticeDao {
@@ -25,4 +27,8 @@ public interface NoticeDao {
 	public void closeNotice(@Param("noticeId") Integer noticeId, @Param("isClosed") boolean isClosed);
 
 	public List<NoticeApplyRespDto> findNoticeApply(Integer userId);
+
+	public NoticeInsertRespDto noticeInsertResult(Integer companyId);
+
+	public CloseNoticeRespDto closeNoticeResult(Integer noticeId);
 }

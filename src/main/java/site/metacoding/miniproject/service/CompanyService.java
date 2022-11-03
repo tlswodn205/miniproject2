@@ -15,7 +15,6 @@ import site.metacoding.miniproject.domain.notice.Notice;
 import site.metacoding.miniproject.domain.notice.NoticeDao;
 import site.metacoding.miniproject.domain.recommend.Recommend;
 import site.metacoding.miniproject.domain.recommend.RecommendDao;
-import site.metacoding.miniproject.domain.submit_resume.SubmitResume;
 import site.metacoding.miniproject.domain.submit_resume.SubmitResumeDao;
 import site.metacoding.miniproject.domain.subscribe.Subscribe;
 import site.metacoding.miniproject.domain.subscribe.SubscribeDao;
@@ -34,6 +33,7 @@ import site.metacoding.miniproject.dto.response.company.CompanyJoinRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyMyPageRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyMyPageUpdateRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyRecommendRespDto;
+import site.metacoding.miniproject.dto.response.notice.NoticeInsertRespDto;
 import site.metacoding.miniproject.dto.response.notice.NoticeRespDto;
 import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
 import site.metacoding.miniproject.dto.response.resume.SubmitResumeRespDto;
@@ -102,7 +102,7 @@ public class CompanyService {
     List<CompanyRecommendRespDto> companyRecommendDtoList = companyDao.findToRecommned();
 
     for (int i = 0; i < companyRecommendDtoList.size(); i++) {
-      List<NeedSkill> needSkillList = needSkillDao.findByNoticeId(companyRecommendDtoList.get(i).getNoticeId());
+      List<String> needSkillList = needSkillDao.findByNoticeId(companyRecommendDtoList.get(i).getNoticeId());
       companyRecommendDtoList.get(i).setNeedSkillList(needSkillList);
     }
     return companyRecommendDtoList;
@@ -115,7 +115,6 @@ public class CompanyService {
 
     for (int i = 0; i < noticeIds.size(); i++) {
       int count = 0;
-      int count2 = 0;
       for (int j = 0; j < skillList.size(); j++) {
         if (needSkillDao.findBySkillAndNoticeId(skillList.get(j), noticeIds.get(i).getNoticeId()) != null) {
           count++;
@@ -135,7 +134,6 @@ public class CompanyService {
 
     for (int i = 0; i < noticeIds.size(); i++) {
       int count = 0;
-      int count2 = 0;
       for (int j = 0; j < skillList.size(); j++) {
         if (needSkillDao.findBySkillAndNoticeId(skillList.get(j), noticeIds.get(i).getNoticeId()) != null) {
           count++;
@@ -257,7 +255,7 @@ public class CompanyService {
   }
 
   @Transactional
-  public void 공고등록하기(NoticeInsertReqDto noticeInsertDto) {
+  public NoticeInsertRespDto 공고등록하기(NoticeInsertReqDto noticeInsertDto) {
     System.out.println(noticeInsertDto.getDegree());
     noticeDao.insert(noticeInsertDto.toNotice());
     for (int i = 0; i < noticeInsertDto.getNeedSkill().size(); i++) {
@@ -266,10 +264,11 @@ public class CompanyService {
               noticeDao.findRecentNoticeId(noticeInsertDto.getCompanyId()),
               i));
     }
+    return noticeDao.noticeInsertResult(noticeInsertDto.getCompanyId());
   }
 
   @Transactional
-  public List<NeedSkill> noticeId로필요기술들고오기(Integer noticeId) {
+  public List<String> noticeId로필요기술들고오기(Integer noticeId) {
     return needSkillDao.findByNoticeId(noticeId);
   }
 
