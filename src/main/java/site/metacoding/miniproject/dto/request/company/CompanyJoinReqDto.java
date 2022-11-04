@@ -2,10 +2,12 @@ package site.metacoding.miniproject.dto.request.company;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.user.User;
 
 @NoArgsConstructor
+@Setter
 @Getter
 public class CompanyJoinReqDto {
 	private String username;

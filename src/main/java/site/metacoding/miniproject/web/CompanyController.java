@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.UUID;
+
 import javax.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.company.Company;
-import site.metacoding.miniproject.domain.need_skill.NeedSkill;
-import site.metacoding.miniproject.domain.notice.Notice;
-import site.metacoding.miniproject.domain.resume.Resume;
 import site.metacoding.miniproject.domain.user.User;
 import site.metacoding.miniproject.dto.SessionUserDto;
 import site.metacoding.miniproject.dto.request.company.CompanyInsertReqDto;
