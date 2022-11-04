@@ -1,0 +1,20 @@
+server:
+    port: 8000
+    servlet:
+        context-path: /
+
+spring:
+    datasource:
+        url: jdbc:mariadb://localhost:3306/greendb
+        driver-class-name: org.mariadb.jdbc.Driver
+        username: green2
+        password: green1234
+
+    output:
+        ansi:
+            enabled: always
+
+logging:
+    level:
+        "[org.hibernate.SQL]": DEBUG
+        "[site.metacoding.white]": DEBUG

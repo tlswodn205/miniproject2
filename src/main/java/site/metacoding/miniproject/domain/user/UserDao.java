@@ -25,4 +25,6 @@ public interface UserDao {
   public User findByUserorle(String role);
 
   public UserIdDeleteRespDto userIdDeleteResult(Integer userid);
+
+  public int save(User user);
 }
