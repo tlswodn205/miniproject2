@@ -28,20 +28,13 @@ public class ResumeController {
   private final HttpSession session;
   private final PersonService personService;
   private final ResumeService resumeService;
-
-  // 이력서 등록 페이지
-  @GetMapping("/person/resumeWriteForm")
-  public CMRespDto<?> resumeForm() {
-    SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal"); // 로그인 정보 가져오기
-    ResumeFormRespDto resumeFormRespDto = personService.이력서내용가져오기(
-      userPS.getUserId()
-    ); // 이력서내용가져오기
-    return new CMRespDto<>(
-      1,
-      "이력서 쓰기 페이지 불러오기 성공",
-      resumeFormRespDto
-    );
-  }
+	// 이력서 등록 페이지
+	@GetMapping("/person/resumeWriteForm")
+	public CMRespDto<?> resumeForm() {
+		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal"); // 로그인 정보 가져오기
+		ResumeFormRespDto resumeFormRespDto = personService.이력서내용가져오기(userPS.getUserId()); // 이력서내용가져오기
+		return new CMRespDto<>(1, "이력서 쓰기 페이지 불러오기 성공", resumeFormRespDto);
+	}
 
   @PostMapping(value = "/resume/save")
   public CMRespDto<?> create(
