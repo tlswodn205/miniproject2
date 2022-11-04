@@ -24,8 +24,8 @@ import site.metacoding.miniproject.dto.SessionUserDto;
 import site.metacoding.miniproject.dto.request.company.CompanyJoinReqDto;
 
 @ActiveProfiles("test") // 테스트 어플리케이션 실행
-@Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
+// @Sql(scripts = "classpath:create.sql", executionPhase =
+// ExecutionPhase.BEFORE_TEST_METHOD)
 @Transactional
 @AutoConfigureMockMvc // MockMvc Ioc 컨테이너에 등록 실제가 아닌 가짜
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK) // MOCK은 가짜 환경임
@@ -44,16 +44,17 @@ public class CompanyApiControllerTest {
     @BeforeEach
     public void sessionInit() {
         session = new MockHttpSession();
-        User user = User.builder().username("ssar").password("1234").build();
+        User user = User.builder().userId(1).username("ssar").role("company").build();
         session.setAttribute("sessionUserDto", new SessionUserDto(user));
     }
 
-    @Sql(scripts = "classpath:insert.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    // @Sql(scripts = "classpath:insert.sql", executionPhase =
+    // ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     public void join_test() throws Exception {
         // given
         CompanyJoinReqDto companyJoinReqDto = new CompanyJoinReqDto();
-        companyJoinReqDto.setUsername("cos");
+        companyJoinReqDto.setUsername("apt");
         companyJoinReqDto.setPassword("1234");
 
         String body = om.writeValueAsString(companyJoinReqDto);
@@ -62,11 +63,12 @@ public class CompanyApiControllerTest {
         ResultActions resultActions = mvc
                 .perform(MockMvcRequestBuilders.post("/company/join").content(body)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
-
+        System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
         // then
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1L));
+        System.out.println(body);
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
     }
 
 }

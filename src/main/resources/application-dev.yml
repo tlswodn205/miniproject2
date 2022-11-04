@@ -9,7 +9,7 @@ spring:
         driver-class-name: org.mariadb.jdbc.Driver
         username: green
         password: green1234
- 
+
     output:
         ansi:
             enabled: always

@@ -57,7 +57,8 @@ public class CompanyService {
     userDao.insert(companyJoinDto.toUser());
     User userPS = userDao.findByUsername(companyJoinDto.getUsername());
     companyDao.insert(companyJoinDto.toCompany(userPS.getUserId()));
-    return companyDao.CompanyJoinResult(userPS.getUserId());
+    CompanyJoinRespDto companyJoinRespDto = companyDao.CompanyJoinResult(userPS.getUserId());
+    return companyJoinRespDto;
   }
 
   @Transactional
