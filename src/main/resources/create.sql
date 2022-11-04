@@ -150,7 +150,7 @@ INSERT into person_skill(person_id, skill, created_at) VALUES('6', 'Flutter', NO
 insert into resume(person_id , resume_title, photo , introduction , my_cloud, created_at) 
 VALUES('1', '프론트엔드용이력서', '사진값', '안녕하세요',"www.naver.com", NOW());
 
-insert into resume(person_id , resume_title, photo , introduction ,    my_cloud, created_at) 
+insert into resume(person_id , resume_title, photo , introduction ,	 my_cloud, created_at) 
 VALUES('1', '백엔드용이력서', '사진값', '안녕하세요',"www.naver.com", NOW());
 
 INSERT INTO submit_resume(resume_id, notice_id, created_at) VALUE(8, 7, NOW());
@@ -216,12 +216,6 @@ insert into need_skill(notice_id , skill , created_at) VALUES('1', 'JAVA', NOW()
 insert into need_skill(notice_id , skill , created_at) VALUES('1', 'JavaScript', NOW());
 insert into need_skill(notice_id , skill , created_at) VALUES('2', 'java', NOW());
 insert into need_skill(notice_id , skill , created_at) VALUES('2', 'JavaScript', NOW());
-insert into need_skill(notice_id , skill , created_at) VALUES('4', 'JavaScr   ipt', NOW());
-    INSERT INTO subscribe(user_id, subject_id, created_At)
-    VALUE(1, 5, NOW());
-   
-   UPDATE company SET introduction = '알파트릭스는 혁신을 이끄는 기업입니다.' WHERE company_Id = 2;
-   
     INSERT INTO resume(person_id, resume_title, photo, introduction, my_cloud, created_At )
     VALUE(2, "재능충지아링", NULL, "지아링링", "www.naver.com", NOW());
     COMMIT;
