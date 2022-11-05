@@ -281,26 +281,9 @@ public class PersonApiControllerTest {
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
     }
 
-    
-    @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-    @Test
-    public void interestPersonSkillList_test() throws Exception {
-        // given
-        List<String> skillList = new ArrayList<>();
-        skillList.add("java");
-        String body = om.writeValueAsString(skillList);
-        // when
-        ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.post("/person/skillPersonMatching/personSkill").session(session).content(body)
-                        .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
-        System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
-        // then
-        MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
-    }
 
     // 관심구직자리스트
+    @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     public void interestPersonSkillList_test() throws Exception {
         // given
