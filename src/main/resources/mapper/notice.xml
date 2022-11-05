@@ -77,7 +77,7 @@
   </select>
 
 
-  <select id="closeNoticeResult">
+  <select id="closeNoticeResult" resultType="site.metacoding.miniproject.dto.response.notice.CloseNoticeRespDto">
       select *
       from notice
       where notice_id = #{noticeId}
