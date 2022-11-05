@@ -4,10 +4,12 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import site.metacoding.miniproject.domain.person.Person;
 import site.metacoding.miniproject.domain.user.User;
 
 @NoArgsConstructor
+@Setter
 @Getter
 public class PersonJoinReqDto {
 	private String username;
