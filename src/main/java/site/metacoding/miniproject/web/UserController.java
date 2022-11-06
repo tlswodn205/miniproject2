@@ -1,5 +1,7 @@
 package site.metacoding.miniproject.web;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +15,8 @@ import site.metacoding.miniproject.dto.request.user.LoginReqDto;
 import site.metacoding.miniproject.dto.response.CMRespDto;
 import site.metacoding.miniproject.dto.response.person.UserIdDeleteRespDto;
 import site.metacoding.miniproject.service.UserService;
+import site.metacoding.miniproject.utill.JWTToken.CookieForToken;
+import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,15 +26,16 @@ public class UserController {
   private final HttpSession session;
 
   @PostMapping("/login")
-  public CMRespDto<?> login(@RequestBody LoginReqDto loginDto) {
+  public CMRespDto<?> login(@RequestBody LoginReqDto loginDto,HttpServletResponse resp) {
     SessionUserDto principal = userService.로그인(loginDto);
     if (principal == null) {
       return new CMRespDto<>(-1, "로그인실패", null);
     }
-    session.setAttribute("principal", principal);
+		String token = CreateJWTToken.createToken(principal);
 
-    SessionUserDto isLogin = (SessionUserDto) session.getAttribute("principal");
-    return new CMRespDto<>(1, "로그인성공", isLogin);
+		resp.addHeader("Authorization", "Bearer " + token);
+		resp.addCookie(CookieForToken.setCookie(token));
+    return new CMRespDto<>(1, "로그인성공", principal);
   }
 
   // 로그인 페이지
@@ -41,9 +46,15 @@ public class UserController {
 
   // 로그아웃
   @GetMapping("/logout")
-  public CMRespDto<?> logout() {
+  public CMRespDto<?> logout(HttpServletResponse resp) {
+		Cookie cookie = new Cookie("Authorization", null);
+		cookie.setMaxAge(0);
+		cookie.setPath("/");
+		resp.addCookie(cookie);
+
     SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
-    session.invalidate();
+
+		session.removeAttribute("principal");
     return new CMRespDto<>(1, "로그아웃 성공", userPS);
   }
 

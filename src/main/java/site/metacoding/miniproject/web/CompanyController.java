@@ -86,7 +86,7 @@ public class CompanyController {
   }
 
   // 기업 마이페이지
-  @GetMapping("/companyMypageForm")
+  @GetMapping("/s/companyMypageForm")
   public CMRespDto<?> companyMyPageForm(Model model) {
     SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
     CompanyMyPageRespDto companyMyPageDto = companyService.기업마이페이지정보보기(

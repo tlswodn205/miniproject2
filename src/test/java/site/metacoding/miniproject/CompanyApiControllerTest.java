@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -36,6 +37,8 @@ import site.metacoding.miniproject.dto.SessionUserDto;
 import site.metacoding.miniproject.dto.request.company.CompanyJoinReqDto;
 import site.metacoding.miniproject.dto.request.company.CompanyMyPageUpdateReqDto;
 import site.metacoding.miniproject.dto.request.notice.NoticeInsertReqDto;
+import site.metacoding.miniproject.dto.request.user.LoginReqDto;
+import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 
 @ActiveProfiles("test") // 테스트 어플리케이션 실행
 @Transactional
@@ -59,59 +62,29 @@ public class CompanyApiControllerTest {
 
     private MockHttpSession session;
 
-    @BeforeEach
-    public void sessionInit() {
-        session = new MockHttpSession();// 직접 new를 했다 MockHttpSession해야 Mock가 된다
-        User user = User.builder().userId(11).username("empc").role("company").build();
-        session.setAttribute("principal", new SessionUserDto(user));
-    }
+    private MockCookie cookie;
+
+    // @BeforeEach
+    // public void sessionInit() {
+    //     session = new MockHttpSession();// 직접 new를 했다 MockHttpSession해야 Mock가 된다
+    //     User user = User.builder().userId(11).username("empc").role("company").build();
+    //     session.setAttribute("principal", new SessionUserDto(user));
+    // }
+
 
     @BeforeEach
-    public void dataInit() {
-        Company company = Company.builder().companyName("삼성").companyGoal("1조").userId(11).build();
+    public void sessionToInit() {
+
+        session = new MockHttpSession();
+        SessionUserDto sessionUserDto = new SessionUserDto(7, "ire", "company");
+
+        session.setAttribute("principal", sessionUserDto);
+
+        String JwtToken = CreateJWTToken.createToken(sessionUserDto); // Authorization
+        cookie = new MockCookie("Authorization", JwtToken);
+
     }
 
-    // 기업회원가입
-    @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-    @Test
-    public void joinCompany_test() throws Exception {
-
-        // given
-        CompanyJoinReqDto companyJoinDto = new CompanyJoinReqDto();
-        companyJoinDto.setUsername("asdfdafds");
-        companyJoinDto.setPassword("1234");
-        companyJoinDto.setRole("person");
-
-        String body = om.writeValueAsString(companyJoinDto);
-
-        // when
-        ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.post("/company/join").content(body)
-                        .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
-        System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
-        // then
-        MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
-    }
-
-    // 기업 회원가입 페이지
-    @Test
-    public void companyJoinForm_test() throws Exception {
-
-        // given
-
-        // when
-        ResultActions resultActions = mvc
-                .perform(get("/companyJoinForm").accept(APPLICATION_JSON));
-        System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
-
-        // then
-        MvcResult mvcResult = resultActions.andReturn();
-        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
-        resultActions.andExpect(status().isOk());
-        resultActions.andExpect(jsonPath("$.code").value(1));
-    }
 
     // 기업추천 리스트 페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
@@ -137,10 +110,9 @@ public class CompanyApiControllerTest {
     @Test
     public void companyMyPageForm_test() throws Exception {
         // given
-
         // when
         ResultActions resultActions = mvc
-                .perform(get("/companyMypageForm").session(session).accept(APPLICATION_JSON));
+                .perform(get("/s/companyMypageForm").session(session).cookie(cookie).accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();

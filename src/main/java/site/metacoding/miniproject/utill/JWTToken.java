@@ -28,6 +28,7 @@ public class JWTToken {
             HashMap<String, Object> map = new HashMap<>();
             map.put("userId", sessionUserDto.getUserId());
             map.put("username", sessionUserDto.getUsername());
+            map.put("role", sessionUserDto.getRole());
 
             // casting exception 발생
 
@@ -145,23 +146,30 @@ public class JWTToken {
     public static class TokenToSinedDto {
         Integer userId = null;
         String username = null;
+        String role = null;
 
         // 토큰 -> 로그인Dto 변경 로직 ..... 뭔가 더러움
         public SessionUserDto tokenToSignedDto(Map<String, Object> getSigned) {
             for (String key : getSigned.keySet()) {
 
-                if (key.equals("usersId")) {
+                if (key.equals("userId")) {
 
                     userId = ((Integer) getSigned.get(key));
 
-                } else if (key.equals("username")) {
+                } 
+                if (key.equals("username")) {
+
+                    username = (getSigned.get(key).toString());
+
+                }
+                if (key.equals("role")) {
 
                     username = (getSigned.get(key).toString());
 
                 }
             }
 
-                return new SessionUserDto(userId, username);
+                return new SessionUserDto(userId, username, role);
         }
 
     }

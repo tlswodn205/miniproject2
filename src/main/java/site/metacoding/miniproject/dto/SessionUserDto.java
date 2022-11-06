@@ -13,9 +13,11 @@ import site.metacoding.miniproject.domain.user.User;
 public class SessionUserDto {
     private Integer userId;
     private String username;
+    private String role;
 
     public SessionUserDto(User user) {
         this.userId = user.getUserId();
         this.username = user.getUsername();
+        this.role = user.getRole();
     }
 }

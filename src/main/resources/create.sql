@@ -1,4 +1,4 @@
-USE greendb2;
+USE greendb;
 
 DROP TABLE user;
 DROP TABLE submit_resume;

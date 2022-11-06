@@ -40,7 +40,7 @@ public class JwtAuthorizationFilter implements Filter {
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(SecretKey.SECRETKEY.key())).build().verify(tokenForCookie);
         
         //map 형식으로 저장되어있는 토큰값을 map형식으로 가져온다.
-        Map<String, Object> getSigned = decodedJWT.getClaim("sigendDto").asMap();
+        Map<String, Object> getSigned = decodedJWT.getClaim("sessionUserDto").asMap();
 
         TokenToSinedDto tokenToSinedDto = new TokenToSinedDto();
         SessionUserDto sessionUserDto = tokenToSinedDto.tokenToSignedDto(getSigned);
