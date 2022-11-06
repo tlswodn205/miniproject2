@@ -157,10 +157,8 @@ public class CompanyController {
 
   @PostMapping("/company/skillCompanyMatchingList/needSkill")
   public CMRespDto<List<CompanyRecommendRespDto>> skillCompanyMatchingList(
-      @RequestBody List<String> skillList,
-      Model model) {
-    List<CompanyRecommendRespDto> CompanyRecommendDtoList = companyService.NoticeId로공고불러오기(
-        skillList);
+      @RequestBody List<String> skillList, Model model) {
+    List<CompanyRecommendRespDto> CompanyRecommendDtoList = companyService.NoticeId로공고불러오기(skillList);
     return new CMRespDto<List<CompanyRecommendRespDto>>(
         1,
         "기업불러오기 성공",

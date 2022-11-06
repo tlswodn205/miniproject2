@@ -26,5 +26,4 @@ public interface UserDao {
 
   public UserIdDeleteRespDto userIdDeleteResult(Integer userid);
 
-  public int save(User user);
 }

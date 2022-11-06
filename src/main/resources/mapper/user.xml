@@ -58,9 +58,6 @@
 </select>
 
 
-    <insert id="save">
-        INSERT INTO user(username, password, role, created_at )
-		VALUE(#{username}, #{password}, #{role}, now())
-    </insert>
+
 
 </mapper>
