@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.company.Company;
+import site.metacoding.miniproject.domain.need_skill.NeedSkillDao;
+import site.metacoding.miniproject.domain.notice.NoticeDao;
 import site.metacoding.miniproject.domain.user.User;
 import site.metacoding.miniproject.dto.SessionUserDto;
 import site.metacoding.miniproject.dto.request.company.CompanyInsertReqDto;
@@ -53,6 +55,8 @@ public class CompanyController {
   private final CompanyService companyService;
   private final UserService userService;
   private final PersonService personService;
+  private final NoticeDao noticeDao;
+  private final NeedSkillDao needSkillDao;
 
   // 기업회원가입
   @PostMapping("/company/join")
@@ -235,7 +239,8 @@ public class CompanyController {
 
   @PostMapping("/company/noticeInsert")
   public CMRespDto<?> noticeInsert(@RequestBody NoticeInsertReqDto noticeInsertDto) {
-    NoticeInsertRespDto noticeInsertRespDto = companyService.공고등록하기(noticeInsertDto);
+    NoticeInsertRespDto noticeInsertRespDto = noticeDao.noticeInsertResult(noticeInsertDto.getCompanyId());
+    noticeInsertRespDto.setNeedSkill(needSkillDao.findByNoticeId(noticeInsertRespDto.getNoticeId()));
     return new CMRespDto<>(1, "공고 등록 완료", noticeInsertRespDto);
   }
 
