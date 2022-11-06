@@ -1,4 +1,4 @@
-USE greenDb2;
+USE greendb2;
 
 DROP TABLE user;
 DROP TABLE submit_resume;
@@ -150,7 +150,7 @@ INSERT into person_skill(person_id, skill, created_at) VALUES('6', 'Flutter', NO
 insert into resume(person_id , resume_title, photo , introduction , my_cloud, created_at) 
 VALUES('1', '프론트엔드용이력서', '사진값', '안녕하세요',"www.naver.com", NOW());
 
-insert into resume(person_id , resume_title, photo , introduction ,	 my_cloud, created_at) 
+insert into resume(person_id , resume_title, photo , introduction ,    my_cloud, created_at) 
 VALUES('1', '백엔드용이력서', '사진값', '안녕하세요',"www.naver.com", NOW());
 
 INSERT INTO submit_resume(resume_id, notice_id, created_at) VALUE(8, 7, NOW());
@@ -174,16 +174,6 @@ insert into company (user_id, company_name , company_email , company_phone ,tech
 VALUES('12', '코핀', 'ire@nate.com', '01000000000', '메타버스', '제주특별자치도','2016','안녕하세요',NULL, null,'관리자', NOW());
 
 UPDATE company SET company_goal = '세계를 선도하는 기업' WHERE company_Id =1;
-
-SELECT * from notice;
-SELECT * from need_skill;
-
-INSERT into need_skill(notice_id, skill, created_at) VALUES('2', 'java', NOW());
-INSERT into need_skill(notice_id, skill, created_at) VALUES('1', 'javaScript', NOW());
-INSERT into need_skill(notice_id, skill, created_at) VALUES('1', 'HTML/CSS', NOW());
-INSERT into need_skill(notice_id, skill, created_at) VALUES('6', 'MySQL', NOW());
-INSERT into need_skill(notice_id, skill, created_at) VALUES('6', 'AWS', NOW());
-INSERT into need_skill(notice_id, skill, created_at) VALUES('5', 'Flutter', NOW());
 
 
 
@@ -212,10 +202,15 @@ VALUES('12','침식체 잡을 카운터구함',6, '3천만원','대졸비전공'
 INSERT INTO recommend(user_id, subject_id, created_at)
 VALUES(1, 4 ,NOW());
 
-insert into need_skill(notice_id , skill , created_at) VALUES('1', 'JAVA', NOW());
-insert into need_skill(notice_id , skill , created_at) VALUES('1', 'JavaScript', NOW());
-insert into need_skill(notice_id , skill , created_at) VALUES('2', 'java', NOW());
-insert into need_skill(notice_id , skill , created_at) VALUES('2', 'JavaScript', NOW());
+
+INSERT into need_skill(notice_id, skill, created_at) VALUES('2', 'java', NOW());
+INSERT into need_skill(notice_id, skill, created_at) VALUES('2', 'javaScript', NOW());
+INSERT into need_skill(notice_id, skill, created_at) VALUES('1', 'javaScript', NOW());
+INSERT into need_skill(notice_id, skill, created_at) VALUES('1', 'HTML/CSS', NOW());
+INSERT into need_skill(notice_id, skill, created_at) VALUES('6', 'MySQL', NOW());
+INSERT into need_skill(notice_id, skill, created_at) VALUES('6', 'AWS', NOW());
+INSERT into need_skill(notice_id, skill, created_at) VALUES('5', 'Flutter', NOW());
+
     INSERT INTO resume(person_id, resume_title, photo, introduction, my_cloud, created_At )
     VALUE(2, "재능충지아링", NULL, "지아링링", "www.naver.com", NOW());
     COMMIT;

@@ -4,10 +4,12 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import site.metacoding.miniproject.domain.need_skill.NeedSkill;
 import site.metacoding.miniproject.domain.notice.Notice;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class NoticeInsertReqDto {
 	private Integer companyId;

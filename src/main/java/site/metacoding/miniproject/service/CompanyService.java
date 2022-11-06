@@ -257,6 +257,7 @@ public class CompanyService {
 
   @Transactional
   public NoticeInsertRespDto 공고등록하기(NoticeInsertReqDto noticeInsertDto) {
+    
     System.out.println(noticeInsertDto.getDegree());
     noticeDao.insert(noticeInsertDto.toNotice());
     for (int i = 0; i < noticeInsertDto.getNeedSkill().size(); i++) {
