@@ -3,11 +3,13 @@ package site.metacoding.miniproject.dto.response.notice;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.metacoding.miniproject.domain.notice.Notice;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class NoticeInsertRespDto {
     private Integer noticeId;
     private Integer companyId;

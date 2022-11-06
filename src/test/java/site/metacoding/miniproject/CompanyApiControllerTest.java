@@ -22,9 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import site.metacoding.miniproject.domain.user.User;
 import site.metacoding.miniproject.domain.user.UserDao;
-import site.metacoding.miniproject.dto.SessionUserDto;
 import site.metacoding.miniproject.dto.request.company.CompanyJoinReqDto;
 
 @ActiveProfiles("test") // 테스트 어플리케이션 실행

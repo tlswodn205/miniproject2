@@ -46,7 +46,7 @@ public class UserApiControllerTest {
   public void sessionInit() {
     session = new MockHttpSession(); // 직접 new를 했다 MockHttpSession해야 Mock가 된다
     User user = User.builder().userId(1).username("ssar").build(); // password 는 없다
-    session.setAttribute("sessionUserDto", new SessionUserDto(user)); // 가짜세션이 만들어진 상태이다 -> 아직 주입은 안된 상태
+    session.setAttribute("principal", new SessionUserDto(user)); // 가짜세션이 만들어진 상태이다 -> 아직 주입은 안된 상태
   }
 
   @BeforeEach
