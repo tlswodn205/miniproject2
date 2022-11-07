@@ -29,15 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.company.CompanyDao;
-import site.metacoding.miniproject.domain.user.User;
 import site.metacoding.miniproject.domain.user.UserDao;
 import site.metacoding.miniproject.dto.SessionUserDto;
 import site.metacoding.miniproject.dto.request.company.CompanyJoinReqDto;
 import site.metacoding.miniproject.dto.request.company.CompanyMyPageUpdateReqDto;
 import site.metacoding.miniproject.dto.request.notice.NoticeInsertReqDto;
-import site.metacoding.miniproject.dto.request.user.LoginReqDto;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 
 @ActiveProfiles("test") // 테스트 어플리케이션 실행
@@ -85,6 +82,47 @@ public class CompanyApiControllerTest {
 
     }
 
+    // 기업회원가입
+    @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Test
+    public void joinCompany_test() throws Exception {
+        // given
+
+        CompanyJoinReqDto companyJoinReqDto = new CompanyJoinReqDto();
+        companyJoinReqDto.setUsername("apttftf");
+        companyJoinReqDto.setPassword("1234");
+        companyJoinReqDto.setRole("company");
+
+        String body = om.writeValueAsString(companyJoinReqDto);
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.post("/company/join").content(body)
+                        .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
+        System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value("apttftf"));
+    }
+
+    // 기업회원가입 페이지
+    @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Test
+    public void companyJoinForm_test() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.get("/companyJoinForm")
+                        .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
+        System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
+    }
 
     // 기업추천 리스트 페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
