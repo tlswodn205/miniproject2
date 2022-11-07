@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.miniproject.domain.company.CompanyDao;
 import site.metacoding.miniproject.domain.need_skill.NeedSkillDao;
 import site.metacoding.miniproject.domain.notice.Notice;
 import site.metacoding.miniproject.domain.notice.NoticeDao;
@@ -41,11 +42,13 @@ import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDt
 import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
 import site.metacoding.miniproject.dto.response.resume.ResumeFormRespDto;
 import site.metacoding.miniproject.dto.response.resume.ResumeWriteRespDto;
+import site.metacoding.miniproject.handler.ApiException;
 
 @RequiredArgsConstructor
 @Service
 public class PersonService {
 
+	private final CompanyDao companyDao;
 	private final PersonDao personDao;
 	private final UserDao userDao;
 	private final PersonSkillDao personSkillDao;
@@ -156,10 +159,12 @@ public class PersonService {
 	}
 
 	@Transactional
-	public ResumeWriteRespDto 이력서등록(ResumeWriteReqDto resumeWriteDto, Integer personId) {
-		Resume resume = resumeWriteDto.toEntity(personId);
+	public ResumeWriteRespDto 이력서등록(ResumeWriteReqDto resumeWriteDto, Integer userId) {
+
+		Resume resume = resumeWriteDto.toEntity(personDao.findToPersonMyPage(userId).getPersonId());
 		resumeDao.insert(resume);
-		ResumeWriteRespDto resumeWriteRespDto = resumeDao.resumeWriteResult(personId);
+		ResumeWriteRespDto resumeWriteRespDto = resumeDao
+				.resumeWriteResult(personDao.findToPersonMyPage(userId).getPersonId());
 		return resumeWriteRespDto;
 	}
 
@@ -240,7 +245,12 @@ public class PersonService {
 	}
 
 	@Transactional
-	public void 이력서삭제하기(Integer resumeId) {
+	public void 이력서삭제하기(Integer resumeId, Integer userId) {
+		Resume resume = resumeDao.findById(resumeId);
+		Integer personId = personDao.findToId(userId);
+		if (resume.getPersonId() != personId) {
+			throw new ApiException("해당 이력서를 삭제할 수 없습니다.");
+		}
 		resumeDao.deleteById(resumeId);
 	}
 
@@ -316,7 +326,10 @@ public class PersonService {
 	}
 
 	@Transactional
-	public CloseNoticeRespDto 공고마감하기(Integer noticeId) {
+	public CloseNoticeRespDto 공고마감하기(Integer noticeId, Integer userId) {
+		if (companyDao.findToCompanyMyPage(userId).getCompanyId() != noticeDao.findById(noticeId).getCompanyId()) {
+			throw new ApiException("해당 공고를 마감할 수 없습니다.");
+		}
 		noticeDao.closeNotice(noticeId, true);
 		CloseNoticeRespDto closeNoticeRespDto = noticeDao.closeNoticeResult(noticeId);
 		return closeNoticeRespDto;
@@ -351,13 +364,10 @@ public class PersonService {
 					}
 				}
 			}
-			System.out.print(skillList.size() * 0.7999999 + "\t");
-			System.out.println(count);
 			if (skillList.size() * 0.7999999999 <= count) {
 				personIdList.get(i).setMark(true);
 			}
 			System.out.println(personIdList.get(i).isMark());
-			System.out.println("============================");
 		}
 		return personIdList;
 	}

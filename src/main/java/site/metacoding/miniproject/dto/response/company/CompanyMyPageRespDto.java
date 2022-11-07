@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 public class CompanyMyPageRespDto {
 	private Integer userId;
+	private Integer companyId;
 	private String username;
 	private String password;
 	private String companyName;

@@ -20,18 +20,18 @@
 
   <delete id="deleteById">
     DELETE FROM subscribe
-    WHERE subscribe_Id = #{subscribeId}
+    WHERE subscribe_Id = #{subscribeId} and user_id = #{userId}
   </delete>
 
   <update id="update"></update>
-  
+
   <select id="findByUserId" resultType="site.metacoding.miniproject.domain.subscribe.Subscribe">
     SELECT *
     FROM subscribe
     WHERE user_id = #{userId}
   </select>
-  
-    <select id="findByUserIdAndSubjectId" resultType="Integer">
+
+  <select id="findByUserIdAndSubjectId" resultType="Integer">
     SELECT subscribe_Id
     FROM subscribe
     WHERE user_id = #{userId} and subject_id = #{subjectId}
@@ -40,6 +40,6 @@
   <select id="SubscribeDeleteResult" resultType="site.metacoding.miniproject.dto.response.subscribe.SubscribeDeleteRespDto">
     select * 
     FROM subscribe
-    WHERE subscribe_Id = #{subscribeId}
+    WHERE subscribe_Id = #{subscribeId} and user_id = #{userId}
   </select>
 </mapper>

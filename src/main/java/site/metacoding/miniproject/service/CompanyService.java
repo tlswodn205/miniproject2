@@ -170,10 +170,10 @@ public class CompanyService {
   }
 
   @Transactional
-  public SubscribeDeleteRespDto 구독취소(Integer subscribeId) {
-    SubscribeDeleteRespDto subscribeDeleteRespDto = subscribeDao.SubscribeDeleteResult(
+  public SubscribeDeleteRespDto 구독취소(Integer userId, Integer subscribeId) {
+    SubscribeDeleteRespDto subscribeDeleteRespDto = subscribeDao.SubscribeDeleteResult(userId,
         subscribeId);
-    subscribeDao.deleteById(subscribeId);
+    subscribeDao.deleteById(userId, subscribeId);
     return subscribeDeleteRespDto;
   }
 
@@ -257,7 +257,7 @@ public class CompanyService {
 
   @Transactional
   public NoticeInsertRespDto 공고등록하기(NoticeInsertReqDto noticeInsertDto) {
-    
+
     System.out.println(noticeInsertDto.getDegree());
     noticeDao.insert(noticeInsertDto.toNotice());
     for (int i = 0; i < noticeInsertDto.getNeedSkill().size(); i++) {

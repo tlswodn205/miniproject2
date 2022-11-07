@@ -66,14 +66,13 @@ public class CompanyApiControllerTest {
 
     // @BeforeEach
     // public void sessionInit() {
-    //     session = new MockHttpSession();// 직접 new를 했다 MockHttpSession해야 Mock가 된다
-    //     User user = User.builder().userId(11).username("empc").role("company").build();
-    //     session.setAttribute("principal", new SessionUserDto(user));
+    // session = new MockHttpSession();// 직접 new를 했다 MockHttpSession해야 Mock가 된다
+    // User user =
+    // User.builder().userId(11).username("empc").role("company").build();
+    // session.setAttribute("principal", new SessionUserDto(user));
     // }
 
-
-    @BeforeEach
-    public void sessionToInit() {
+    public void sessionToInitCompany() {
 
         session = new MockHttpSession();
         SessionUserDto sessionUserDto = new SessionUserDto(7, "ire", "company");
@@ -85,6 +84,59 @@ public class CompanyApiControllerTest {
 
     }
 
+    public void sessionToInitPerson() {
+
+        session = new MockHttpSession();
+        SessionUserDto sessionUserDto = new SessionUserDto(1, "ppc", "person");
+
+        session.setAttribute("principal", sessionUserDto);
+
+        String JwtToken = CreateJWTToken.createToken(sessionUserDto); // Authorization
+        cookie = new MockCookie("Authorization", JwtToken);
+
+    }
+
+    // 기업회원가입
+    @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Test
+    public void joinCompany_test() throws Exception {
+        // given
+
+        CompanyJoinReqDto companyJoinReqDto = new CompanyJoinReqDto();
+        companyJoinReqDto.setUsername("apttftf");
+        companyJoinReqDto.setPassword("1234");
+        companyJoinReqDto.setRole("company");
+
+        String body = om.writeValueAsString(companyJoinReqDto);
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.post("/joinCompany").content(body)
+                        .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
+        System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value("apttftf"));
+    }
+
+    // 기업회원가입 페이지
+    @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Test
+    public void companyJoinForm_test() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(MockMvcRequestBuilders.get("/companyJoinForm")
+                        .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
+        System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+        // then
+        MvcResult mvcResult = resultActions.andReturn();
+        System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
+    }
 
     // 기업추천 리스트 페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
@@ -92,10 +144,10 @@ public class CompanyApiControllerTest {
     public void recommendListFrom_test() throws Exception {
 
         // given
-
+        sessionToInitPerson();
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.get("/company/recommendListFrom")
+                .perform(MockMvcRequestBuilders.get("/recommendListFrom").session(session).cookie(cookie)
                         .accept(APPLICATION_JSON));
 
         // then
@@ -110,6 +162,7 @@ public class CompanyApiControllerTest {
     @Test
     public void companyMyPageForm_test() throws Exception {
         // given
+        sessionToInitCompany();
         // when
         ResultActions resultActions = mvc
                 .perform(get("/s/companyMypageForm").session(session).cookie(cookie).accept(APPLICATION_JSON));
@@ -126,7 +179,7 @@ public class CompanyApiControllerTest {
     @Test
     public void update_test() throws Exception {
         // given
-        Long id = 1L;
+        sessionToInitCompany();
         CompanyMyPageUpdateReqDto companyMyPageUpdateReqDto = new CompanyMyPageUpdateReqDto();
         companyMyPageUpdateReqDto.setCeoName("나사장");
 
@@ -135,7 +188,7 @@ public class CompanyApiControllerTest {
 
         // when
         ResultActions resultActions = mvc
-                .perform(put("/api/companyMypage").session(session).content(body)
+                .perform(put("/s/companyMypageUpdate").session(session).cookie(cookie).content(body)
                         // post안에 , 해서 넣을수있다 -> 쿼리스트림
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON) // 둘 중 하나라도 안적으면 안나옴 -> json타입인줄 몰라서
                         .session(session)); // 가짜세션!!
@@ -152,10 +205,10 @@ public class CompanyApiControllerTest {
     @Test
     public void companyInsertForm_test() throws Exception {
         // given
-
+        sessionToInitCompany();
         // when
         ResultActions resultActions = mvc
-                .perform(get("/company/companyInsertWriteForm").session(session).accept(APPLICATION_JSON));
+                .perform(get("/s/companyInsertWriteForm").session(session).cookie(cookie).accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -169,10 +222,10 @@ public class CompanyApiControllerTest {
     @Test
     public void skillCompanyMatching_test() throws Exception {
         // given
-
+        sessionToInitPerson();
         // when
         ResultActions resultActions = mvc
-                .perform(get("/company/matchingListFrom").session(session).accept(APPLICATION_JSON));
+                .perform(get("/matchingListFrom").session(session).cookie(cookie).accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -194,7 +247,7 @@ public class CompanyApiControllerTest {
 
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.post("/company/skillCompanyMatchingList/needSkill")
+                .perform(MockMvcRequestBuilders.post("/skillCompanyMatchingList/needSkill")
                         .content(body)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
         // then
@@ -207,10 +260,10 @@ public class CompanyApiControllerTest {
     @Test
     public void subscribeManage_test() throws Exception {
         // given
-
+        sessionToInitCompany();
         // when
         ResultActions resultActions = mvc
-                .perform(get("/company/subscribeManageForm").session(session).accept(APPLICATION_JSON));
+                .perform(get("/s/subscribeManageForm").session(session).cookie(cookie).accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -224,12 +277,13 @@ public class CompanyApiControllerTest {
     @Test
     public void deleteSubscribe_test() throws Exception {
         // given
-        Integer subscribeId = 1;
+        sessionToInitPerson();
+        Integer subscribeId = 7;
         // when
         ResultActions resultActions = mvc
-                .perform(delete("/company/deleteSubscribe/" + subscribeId)
+                .perform(delete("/s/deleteSubscribe/" + subscribeId)
                         .accept(APPLICATION_JSON)
-                        .session(session));
+                        .session(session).cookie(cookie));
 
         // then/ charset=utf-8안넣으면바로한글이깨진다
 
@@ -241,13 +295,15 @@ public class CompanyApiControllerTest {
     // 기업 상세보기 페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
-    public void companyDetai_test() throws Exception {
+    public void companyDetail_test() throws Exception {
         // given
         Integer companyId = 1;
+        sessionToInitPerson();
 
         // when
         ResultActions resultActions = mvc
-                .perform(get("/company/companyDetailForm/" + companyId).session(session).accept(APPLICATION_JSON));
+                .perform(get("/companyDetailForm/" + companyId).session(session).cookie(cookie)
+                        .accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -263,10 +319,10 @@ public class CompanyApiControllerTest {
 
         // given
         Integer subjectId = 1;
-
+        sessionToInitPerson();
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.post("/company/subscribe/" + subjectId).session(session)
+                .perform(MockMvcRequestBuilders.post("/s/subscribe/" + subjectId).session(session).cookie(cookie)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
         System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
         // then
@@ -282,10 +338,10 @@ public class CompanyApiControllerTest {
 
         // given
         Integer subjectId = 1;
-
+        sessionToInitPerson();
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.post("/company/recommend/" + subjectId).session(session)
+                .perform(MockMvcRequestBuilders.post("/s/recommend/" + subjectId).session(session).cookie(cookie)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
         System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
         // then
@@ -299,10 +355,10 @@ public class CompanyApiControllerTest {
     @Test
     public void noticeLoad_test() throws Exception {
         // given
-
+        sessionToInitCompany();
         // when
         ResultActions resultActions = mvc
-                .perform(get("/company/noticeLoadForm").session(session).accept(APPLICATION_JSON));
+                .perform(get("/s/noticeLoadForm").session(session).cookie(cookie).accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -316,10 +372,10 @@ public class CompanyApiControllerTest {
     @Test
     public void noticeWrite_test() throws Exception {
         // given
-
+        sessionToInitCompany();
         // when
         ResultActions resultActions = mvc
-                .perform(get("/company/noticeWriteForm").session(session).accept(APPLICATION_JSON));
+                .perform(get("/s/noticeWriteForm").session(session).cookie(cookie).accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -346,11 +402,11 @@ public class CompanyApiControllerTest {
 
         noticeInsertDto.setNeedSkill(needSkill);
         String body = om.writeValueAsString(noticeInsertDto);
-
+        sessionToInitCompany();
         // when
         ResultActions resultActions = mvc
                 .perform(
-                        MockMvcRequestBuilders.post("/company/noticeInsert").session(session).content(body)
+                        MockMvcRequestBuilders.post("/s/noticeInsert").session(session).cookie(cookie).content(body)
                                 .contentType(APPLICATION_JSON)
                                 .accept(APPLICATION_JSON));
         System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
@@ -370,7 +426,7 @@ public class CompanyApiControllerTest {
 
         // when
         ResultActions resultActions = mvc
-                .perform(get("/company/noticeDetailForm/" + noticeId).session(session).accept(APPLICATION_JSON));
+                .perform(get("/noticeDetailForm/" + noticeId).accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
@@ -384,10 +440,10 @@ public class CompanyApiControllerTest {
     @Test
     public void myCompanyDetail_test() throws Exception {
         // given
-
+        sessionToInitCompany();
         // when
         ResultActions resultActions = mvc
-                .perform(get("/company/companyDetail").session(session).accept(APPLICATION_JSON));
+                .perform(get("/s/companyDetail").session(session).cookie(cookie).accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();

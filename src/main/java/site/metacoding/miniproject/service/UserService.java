@@ -37,8 +37,7 @@ public class UserService {
   @Transactional
   public UserIdDeleteRespDto 유저삭제하기(Integer userId) {
     UserIdDeleteRespDto userIdDeleteRespDto = userDao.userIdDeleteResult(
-      userId
-    );
+        userId);
     return userIdDeleteRespDto;
   }
 }

@@ -59,7 +59,7 @@ public class CompanyController {
   private final NeedSkillDao needSkillDao;
 
   // 기업회원가입
-  @PostMapping("/company/join")
+  @PostMapping("/joinCompany")
   public CMRespDto<?> joinCompany(
       @RequestBody CompanyJoinReqDto companyJoinDto) {
     User userPS = userService.유저네임으로유저찾기(
@@ -79,7 +79,7 @@ public class CompanyController {
   }
 
   // 기업추천 리스트 페이지
-  @GetMapping("/company/recommendListFrom")
+  @GetMapping("/recommendListFrom")
   public CMRespDto<?> recommendListFrom(Model model) {
     List<CompanyRecommendRespDto> companyRecommendDto = companyService.기업추천리스트보기();
     return new CMRespDto<>(1, "기업추천 리스트", companyRecommendDto);
@@ -98,7 +98,7 @@ public class CompanyController {
   }
 
   // 기업 마이페이지 수정하기
-  @PutMapping("/api/companyMypage")
+  @PutMapping("/s/companyMypageUpdate")
   public CMRespDto<?> updateToCompany(
       @RequestBody CompanyMyPageUpdateReqDto companyMyPageUpdateReqDto) {
     SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
@@ -111,7 +111,7 @@ public class CompanyController {
         companyMyPageUpdateRespDto);
   }
 
-  @GetMapping("/company/companyInsertWriteForm")
+  @GetMapping("/s/companyInsertWriteForm")
   public CMRespDto<?> companyInsertForm(Model model) {
     SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
     CompanyIntroductionRespDto companyPS2 = companyService.기업이력가져오기(
@@ -150,7 +150,7 @@ public class CompanyController {
     return new CMRespDto<>(1, "업로드 성공", companyInsertRespDto);
   }
 
-  @GetMapping("/company/matchingListFrom")
+  @GetMapping("/matchingListFrom")
   public CMRespDto<?> skillCompanyMatching(Model model) {
     List<CompanyRecommendRespDto> companyRecommendDto = companyService.기업추천리스트보기();
     return new CMRespDto<>(
@@ -159,7 +159,7 @@ public class CompanyController {
         companyRecommendDto);
   }
 
-  @PostMapping("/company/skillCompanyMatchingList/needSkill")
+  @PostMapping("/skillCompanyMatchingList/needSkill")
   public CMRespDto<List<CompanyRecommendRespDto>> skillCompanyMatchingList(
       @RequestBody List<String> skillList,
       Model model) {
@@ -171,7 +171,7 @@ public class CompanyController {
         CompanyRecommendDtoList);
   }
 
-  @GetMapping("/company/subscribeManageForm")
+  @GetMapping("/s/subscribeManageForm")
   public CMRespDto<?> subscribeManage(Model model) {
     SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
     List<SubscribeRespDto> subscribeDtoList = companyService.구독목록불러오기(
@@ -182,21 +182,22 @@ public class CompanyController {
         subscribeDtoList);
   }
 
-  @DeleteMapping("/company/deleteSubscribe/{subscribeId}")
+  @DeleteMapping("/s/deleteSubscribe/{subscribeId}")
   public CMRespDto<?> deleteSubscribe(@PathVariable Integer subscribeId) {
-    SubscribeDeleteRespDto subscribeDeleteRespDto = companyService.구독취소(
+    SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
+    SubscribeDeleteRespDto subscribeDeleteRespDto = companyService.구독취소(userPS.getUserId(),
         subscribeId);
     return new CMRespDto<>(1, "구독 취소", subscribeDeleteRespDto);
   }
 
-  @GetMapping("/company/companyDetailForm/{companyId}")
+  @GetMapping("/companyDetailForm/{companyId}")
   public CMRespDto<?> companyDetail(@PathVariable Integer companyId, Model model) {
     SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
     CompanyDetailRespDto companyDetailRespDto = companyService.기업상세보기불러오기(companyId, userPS);
     return new CMRespDto<>(1, "기업 상세보기 페이지 불러오기 완료", companyDetailRespDto);
   }
 
-  @PostMapping("/company/subscribe/{subjectId}")
+  @PostMapping("/s/subscribe/{subjectId}")
   public CMRespDto<?> companySubscribe(@PathVariable Integer subjectId, Model model) {
     SessionUserDto principal = (SessionUserDto) session.getAttribute("principal");
     Integer subscribeId = companyService.구독Id불러오기(principal.getUserId(), subjectId);
@@ -205,11 +206,11 @@ public class CompanyController {
       subscribeId = companyService.구독Id불러오기(principal.getUserId(), subjectId);
       return new CMRespDto<Integer>(1, "구독 완료", subscribeId);
     }
-    SubscribeDeleteRespDto subscribeDeleteRespDto = companyService.구독취소(subscribeId);
+    SubscribeDeleteRespDto subscribeDeleteRespDto = companyService.구독취소(principal.getUserId(), subscribeId);
     return new CMRespDto<>(1, "구독 취소 완료", subscribeDeleteRespDto);
   }
 
-  @PostMapping("/company/recommend/{subjectId}")
+  @PostMapping("/s/recommend/{subjectId}")
   public CMRespDto<RecommendDetailRespDto> companyRecommend(@PathVariable Integer subjectId) {
     SessionUserDto principal = (SessionUserDto) session.getAttribute("principal");
     RecommendDetailRespDto recommendDetail = companyService.기업추천불러오기(principal.getUserId(), subjectId);
@@ -223,35 +224,35 @@ public class CompanyController {
     return new CMRespDto<RecommendDetailRespDto>(1, "추천 취소 완료", recommendDetail);
   }
 
-  @GetMapping("/company/noticeLoadForm")
+  @GetMapping("/s/noticeLoadForm")
   public CMRespDto<?> noticeLoad(Model model) {
     SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
     List<NoticeRespDto> noticeRespDtoList = companyService.유저아이디로공고불러오기(userPS.getUserId());
     return new CMRespDto<>(1, "등록 공고 보기 페이지 불러오기 완료", noticeRespDtoList);
   }
 
-  @GetMapping("/company/noticeWriteForm")
+  @GetMapping("/s/noticeWriteForm")
   public CMRespDto<?> noticeWrite(Model model) {
     SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
     Company company = companyService.유저아이디로찾기(userPS.getUserId());
     return new CMRespDto<>(1, "공고 등록하기 페이지 불러오기 완료", company);
   }
 
-  @PostMapping("/company/noticeInsert")
+  @PostMapping("/s/noticeInsert")
   public CMRespDto<?> noticeInsert(@RequestBody NoticeInsertReqDto noticeInsertDto) {
     NoticeInsertRespDto noticeInsertRespDto = noticeDao.noticeInsertResult(noticeInsertDto.getCompanyId());
     noticeInsertRespDto.setNeedSkill(needSkillDao.findByNoticeId(noticeInsertRespDto.getNoticeId()));
     return new CMRespDto<>(1, "공고 등록 완료", noticeInsertRespDto);
   }
 
-  @GetMapping("/company/noticeDetailForm/{noticeId}")
+  @GetMapping("/noticeDetailForm/{noticeId}")
   public CMRespDto<?> noticeDetail(@PathVariable Integer noticeId, Model model) {
     SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
     NoticeDetailRespDto noticeDetailRespDto = personService.공고하나불러오기(noticeId, userPS);
     return new CMRespDto<>(1, "공고 상세보기 페이지 불러오기 완료", noticeDetailRespDto);
   }
 
-  @GetMapping("/company/companyDetail")
+  @GetMapping("/s/companyDetail")
   public String myCompanyDetail(Model model) {
     SessionUserDto user = (SessionUserDto) session.getAttribute("principal");
     Company company = companyService.유저아이디로찾기(user.getUserId());

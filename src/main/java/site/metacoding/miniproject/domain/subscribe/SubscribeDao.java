@@ -13,14 +13,15 @@ public interface SubscribeDao {
 
   public void update(Subscribe subscribe);
 
-  public void deleteById(int subscribeId);
+  public void deleteById(@Param("userId") Integer userId,
+      @Param("subscribeId") Integer subscribeId);
 
   public List<Subscribe> findByUserId(int userId);
 
   public Integer findByUserIdAndSubjectId(
-    @Param("userId") Integer userId,
-    @Param("subjectId") Integer subjectId
-  );
+      @Param("userId") Integer userId,
+      @Param("subjectId") Integer subjectId);
 
-  public SubscribeDeleteRespDto SubscribeDeleteResult(Integer subscribeId);
+  public SubscribeDeleteRespDto SubscribeDeleteResult(@Param("userId") Integer userId,
+      @Param("subscribeId") Integer subscribeId);
 }

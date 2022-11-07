@@ -16,7 +16,7 @@
 		WHERE company_Id = #{companyId}
 	</select>
 
-	
+
 	<insert id="companyInsertRespDto">
 		INSERT INTO company(company_id, photo, introduction, history, company_goal)
 		VALUE(#{companyId}, #{photo},  #{introduction}, #{history},  #{companyGoal})
@@ -94,7 +94,7 @@
 
 	<select id="findToCompanyMyPage"
 		resultType="site.metacoding.miniproject.dto.response.company.CompanyMyPageRespDto">
-		SELECT u.user_id, u.username, u.password, c.company_name,
+		SELECT u.user_id, c.company_id, u.username, u.password, c.company_name,
 		c.ceo_name,
 		c.address, c.company_phone, substr(company_email,1,
 		instr(company_email,'@')-1) AS company_email, c.tech
@@ -118,7 +118,7 @@
 	</select>
 
 
-    <select id="companyInfoUpdateResult" resultType="site.metacoding.miniproject.dto.response.company.CompanyInsertRespDto">
+	<select id="companyInfoUpdateResult" resultType="site.metacoding.miniproject.dto.response.company.CompanyInsertRespDto">
 		select *
 		from company
 		WHERE company_Id = #{companyId}

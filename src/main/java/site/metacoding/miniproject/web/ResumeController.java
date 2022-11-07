@@ -28,19 +28,19 @@ public class ResumeController {
   private final HttpSession session;
   private final PersonService personService;
   private final ResumeService resumeService;
-	// 이력서 등록 페이지
-	@GetMapping("/person/resumeWriteForm")
-	public CMRespDto<?> resumeForm() {
-		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal"); // 로그인 정보 가져오기
-		ResumeFormRespDto resumeFormRespDto = personService.이력서내용가져오기(userPS.getUserId()); // 이력서내용가져오기
-		return new CMRespDto<>(1, "이력서 쓰기 페이지 불러오기 성공", resumeFormRespDto);
-	}
+
+  // 이력서 등록 페이지
+  @GetMapping("/s/resumeWriteForm")
+  public CMRespDto<?> resumeForm() {
+    SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal"); // 로그인 정보 가져오기
+    ResumeFormRespDto resumeFormRespDto = personService.이력서내용가져오기(userPS.getUserId()); // 이력서내용가져오기
+    return new CMRespDto<>(1, "이력서 쓰기 페이지 불러오기 성공", resumeFormRespDto);
+  }
 
   @PostMapping(value = "/resume/save")
   public CMRespDto<?> create(
-    @RequestPart("file") MultipartFile file,
-    @RequestPart("resumeWriteDto") ResumeWriteReqDto resumeWriteDto
-  ) throws Exception {
+      @RequestPart("file") MultipartFile file,
+      @RequestPart("resumeWriteDto") ResumeWriteReqDto resumeWriteDto) throws Exception {
     int pos = file.getOriginalFilename().lastIndexOf(".");
     String extension = file.getOriginalFilename().substring(pos + 1);
     String filePath = "C:\\temp\\img\\";
@@ -68,9 +68,8 @@ public class ResumeController {
 
   @PostMapping(value = "/resume/update")
   public CMRespDto<?> update(
-    @RequestPart("file") MultipartFile file,
-    @RequestPart("resumeWriteDto") ResumeWriteReqDto resumeWriteDto
-  ) throws Exception {
+      @RequestPart("file") MultipartFile file,
+      @RequestPart("resumeWriteDto") ResumeWriteReqDto resumeWriteDto) throws Exception {
     int pos = file.getOriginalFilename().lastIndexOf(".");
     String extension = file.getOriginalFilename().substring(pos + 1);
     String filePath = "C:\\temp\\img\\";
@@ -97,16 +96,14 @@ public class ResumeController {
   }
 
   // 이력서 상세보기 페이지
-  @GetMapping("/person/resumeDetailForm/{resumeId}")
+  @GetMapping("/resumeDetailForm/{resumeId}")
   public CMRespDto<?> resumeDetailForm(
-    Model model,
-    @PathVariable Integer resumeId
-  ) {
+      Model model,
+      @PathVariable Integer resumeId) {
     ResumeDetailFormRespDto personPS2 = resumeService.이력서상세보기(resumeId);
     return new CMRespDto<>(
-      1,
-      "이력서 상세보기 페이지 불러오기 성공",
-      personPS2
-    );
+        1,
+        "이력서 상세보기 페이지 불러오기 성공",
+        personPS2);
   }
 }
