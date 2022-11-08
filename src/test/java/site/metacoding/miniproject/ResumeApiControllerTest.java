@@ -84,8 +84,9 @@ public class ResumeApiControllerTest {
     // 상태이다 -> 아직 주입은 안된 상태
     // }
 
-    @Test
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
     public void resumeForm_Test() throws Exception {
         // given
         sessionToInitPerson();
@@ -102,8 +103,9 @@ public class ResumeApiControllerTest {
 
     }
 
-    @Test
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
     public void resumeDetailForm_test() throws Exception {
         // given
 

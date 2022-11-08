@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -28,8 +29,7 @@ import site.metacoding.miniproject.dto.request.user.LoginReqDto;
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK) // MOCK은 가짜 환경임
 public class UserApiControllerTest {
 
-  private static final String APPLICATION_JSON =
-    "application/json; charset=utf-8";
+  private static final String APPLICATION_JSON = "application/json; charset=utf-8";
 
   @Autowired
   private MockMvc mvc; // 이걸로 통신을 한다
@@ -43,20 +43,13 @@ public class UserApiControllerTest {
   private MockHttpSession session;
 
   @BeforeEach
-  public void sessionInit() {
-    session = new MockHttpSession(); // 직접 new를 했다 MockHttpSession해야 Mock가 된다
-    User user = User.builder().userId(1).username("ssar").build(); // password 는 없다
-    session.setAttribute("principal", new SessionUserDto(user)); // 가짜세션이 만들어진 상태이다 -> 아직 주입은 안된 상태
-  }
-
-  @BeforeEach
   public void dataInit() {
     User user = User
-      .builder()
-      .userId(1)
-      .username("ssar")
-      .password("1234")
-      .build();
+        .builder()
+        .userId(1)
+        .username("ssar")
+        .password("1234")
+        .build();
     int userPS = userDao.save(user);
   }
 
@@ -70,23 +63,22 @@ public class UserApiControllerTest {
 
     // when
     ResultActions resultActions = mvc.perform(
-      MockMvcRequestBuilders
-        .post("/login")
-        .content(body)
-        .contentType(APPLICATION_JSON)
-        .accept(APPLICATION_JSON)
-    );
+        MockMvcRequestBuilders
+            .post("/login")
+            .content(body)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON));
     System.out.println(
-      "디버그 : " + resultActions.andReturn().getResponse().getContentAsString()
-    );
+        "디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
     // then
     MvcResult mvcResult = resultActions.andReturn();
     System.out.println(
-      "디버그 : " + mvcResult.getResponse().getContentAsString()
-    );
+        "디버그 : " + mvcResult.getResponse().getContentAsString());
     resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
   }
 
+  @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+  @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
   @Test
   public void deleteUserId_test() throws Exception {
     // given
@@ -97,20 +89,17 @@ public class UserApiControllerTest {
 
     // when
     ResultActions resultActions = mvc.perform(
-      MockMvcRequestBuilders
-        .delete("/deleteuser/1")
-        // .content(body)
-        .contentType(APPLICATION_JSON)
-        .accept(APPLICATION_JSON)
-    );
+        MockMvcRequestBuilders
+            .delete("/deleteuser/1")
+            // .content(body)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON));
     System.out.println(
-      "디버그 : " + resultActions.andReturn().getResponse().getContentAsString()
-    );
+        "디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
     // then
     MvcResult mvcResult = resultActions.andReturn();
     System.out.println(
-      "디버그 : " + mvcResult.getResponse().getContentAsString()
-    );
+        "디버그 : " + mvcResult.getResponse().getContentAsString());
     resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1));
   }
 }

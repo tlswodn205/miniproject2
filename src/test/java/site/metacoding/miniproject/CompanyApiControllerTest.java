@@ -72,6 +72,8 @@ public class CompanyApiControllerTest {
     // session.setAttribute("principal", new SessionUserDto(user));
     // }
 
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
+
     public void sessionToInitCompany() {
 
         session = new MockHttpSession();
@@ -98,6 +100,7 @@ public class CompanyApiControllerTest {
 
     // 기업회원가입
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void joinCompany_test() throws Exception {
         // given
@@ -123,6 +126,7 @@ public class CompanyApiControllerTest {
 
     // 기업회원가입 페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void companyJoinForm_test() throws Exception {
         // given
@@ -140,6 +144,7 @@ public class CompanyApiControllerTest {
 
     // 기업추천 리스트 페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void recommendListFrom_test() throws Exception {
 
@@ -159,6 +164,7 @@ public class CompanyApiControllerTest {
 
     // 기업 마이페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void companyMyPageForm_test() throws Exception {
         // given
@@ -176,6 +182,7 @@ public class CompanyApiControllerTest {
 
     // 기업 마이페이지 수정하기
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void update_test() throws Exception {
         // given
@@ -202,6 +209,7 @@ public class CompanyApiControllerTest {
 
     // 기업소개등록 페이지 불러오기
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void companyInsertForm_test() throws Exception {
         // given
@@ -219,6 +227,7 @@ public class CompanyApiControllerTest {
 
     // 기업추천리스트보기
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void skillCompanyMatching_test() throws Exception {
         // given
@@ -235,6 +244,7 @@ public class CompanyApiControllerTest {
     }
 
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void skillCompanyMatchingList_test() throws Exception {
 
@@ -257,6 +267,7 @@ public class CompanyApiControllerTest {
 
     // 구독 관리 페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void subscribeManage_test() throws Exception {
         // given
@@ -274,6 +285,7 @@ public class CompanyApiControllerTest {
 
     // 구독 취소
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void deleteSubscribe_test() throws Exception {
         // given
@@ -294,6 +306,7 @@ public class CompanyApiControllerTest {
 
     // 기업 상세보기 페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void companyDetail_test() throws Exception {
         // given
@@ -314,6 +327,7 @@ public class CompanyApiControllerTest {
 
     // 기업 구독
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void companySubscribe_test() throws Exception {
 
@@ -333,6 +347,7 @@ public class CompanyApiControllerTest {
 
     // 기업 추천
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void companyRecommend_test() throws Exception {
 
@@ -352,6 +367,7 @@ public class CompanyApiControllerTest {
 
     // 등록 공고 보기 페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void noticeLoad_test() throws Exception {
         // given
@@ -369,6 +385,7 @@ public class CompanyApiControllerTest {
 
     // 공고 등록하기 페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void noticeWrite_test() throws Exception {
         // given
@@ -386,6 +403,7 @@ public class CompanyApiControllerTest {
 
     // 공고 등록
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void noticeInsert_test() throws Exception {
 
@@ -419,6 +437,7 @@ public class CompanyApiControllerTest {
 
     // 공고 상세보기 페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void noticeDetail_test() throws Exception {
         // given
@@ -437,6 +456,7 @@ public class CompanyApiControllerTest {
 
     // 공고 상세보기 페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void myCompanyDetail_test() throws Exception {
         // given

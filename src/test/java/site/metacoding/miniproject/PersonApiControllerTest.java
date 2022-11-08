@@ -87,6 +87,7 @@ public class PersonApiControllerTest {
 
     // 개인회원가입
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void joinPerson_test() throws Exception {
         // given
@@ -115,6 +116,7 @@ public class PersonApiControllerTest {
 
     // 개인 회원가입 페이지 불러오기
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void joinPersonForm_test() throws Exception {
         // given
@@ -130,6 +132,7 @@ public class PersonApiControllerTest {
     }
 
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void resumeWrite_test() throws Exception {
         // given
@@ -157,6 +160,7 @@ public class PersonApiControllerTest {
     }
 
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void personRecommend_test() throws Exception {
         // given
@@ -175,6 +179,7 @@ public class PersonApiControllerTest {
     }
 
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void personDetailForm_test() throws Exception {
         // given
@@ -192,6 +197,7 @@ public class PersonApiControllerTest {
     }
 
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void personRecommendList_test() throws Exception {
         // given
@@ -207,6 +213,7 @@ public class PersonApiControllerTest {
     }
 
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void PersonRecommendListFrom_test() throws Exception {
         // given
@@ -224,6 +231,7 @@ public class PersonApiControllerTest {
 
     // 관심구직자리스트
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void interestPersonSkillList_test() throws Exception {
         // given
@@ -245,6 +253,7 @@ public class PersonApiControllerTest {
 
     // 구직자 마이페이지
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void PersonMypageForm_Test() throws Exception {
         // given
@@ -260,6 +269,7 @@ public class PersonApiControllerTest {
     }
 
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void updateToPerson_test() throws Exception {
         // given
@@ -290,6 +300,7 @@ public class PersonApiControllerTest {
 
     // 이력서삭제하기
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void resumeDelete_test() throws Exception {
         // given
@@ -313,6 +324,7 @@ public class PersonApiControllerTest {
     }
 
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void personResumeManage_Test() throws Exception {
         // given
@@ -328,6 +340,7 @@ public class PersonApiControllerTest {
 
     // 공고별구직자리스트
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void findNoticePerApplier_Test() throws Exception {
         // given
@@ -342,6 +355,7 @@ public class PersonApiControllerTest {
     }
 
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void closeNotice_test() throws Exception {
         // given
@@ -357,6 +371,7 @@ public class PersonApiControllerTest {
 
     // 지원공고목록
     @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void personApply_Test() throws Exception {
         // given
@@ -372,6 +387,8 @@ public class PersonApiControllerTest {
     }
 
     // 이력서제출하기
+    @Sql(scripts = "classpath:create.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void submitResume_test() throws Exception {
         // given
