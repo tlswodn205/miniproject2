@@ -367,7 +367,6 @@ public class PersonService {
 			if (skillList.size() * 0.7999999999 <= count) {
 				personIdList.get(i).setMark(true);
 			}
-			System.out.println(personIdList.get(i).isMark());
 		}
 		return personIdList;
 	}

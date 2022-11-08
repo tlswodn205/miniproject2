@@ -170,10 +170,10 @@ public class CompanyService {
   }
 
   @Transactional
-  public SubscribeDeleteRespDto 구독취소(Integer userId, Integer subscribeId) {
+  public SubscribeDeleteRespDto 구독취소(Integer userId, Integer subjectId) {
     SubscribeDeleteRespDto subscribeDeleteRespDto = subscribeDao.SubscribeDeleteResult(userId,
-        subscribeId);
-    subscribeDao.deleteById(userId, subscribeId);
+    subjectId);
+    subscribeDao.deleteById(userId, subjectId);
     return subscribeDeleteRespDto;
   }
 
@@ -256,9 +256,8 @@ public class CompanyService {
   }
 
   @Transactional
-  public NoticeInsertRespDto 공고등록하기(NoticeInsertReqDto noticeInsertDto) {
-
-    System.out.println(noticeInsertDto.getDegree());
+  public NoticeInsertRespDto 공고등록하기(NoticeInsertReqDto noticeInsertDto, SessionUserDto userPS) {
+    noticeInsertDto.setCompanyId(companyDao.findByUserId(userPS.getUserId()).getCompanyId());
     noticeDao.insert(noticeInsertDto.toNotice());
     for (int i = 0; i < noticeInsertDto.getNeedSkill().size(); i++) {
       needSkillDao.insert(
@@ -266,7 +265,10 @@ public class CompanyService {
               noticeDao.findRecentNoticeId(noticeInsertDto.getCompanyId()),
               i));
     }
-    return noticeDao.noticeInsertResult(noticeInsertDto.getCompanyId());
+    
+    NoticeInsertRespDto noticeInsertRespDto = noticeDao.noticeInsertResult(noticeInsertDto.getCompanyId());
+    noticeInsertRespDto.setNeedSkill(needSkillDao.findByNoticeId(noticeInsertRespDto.getNoticeId()));
+    return noticeInsertRespDto;
   }
 
   @Transactional

@@ -336,7 +336,7 @@ public class CompanyApiControllerTest {
         sessionToInitPerson();
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.post("/s/subscribe/" + subjectId).session(session).cookie(cookie)
+                .perform(MockMvcRequestBuilders.get("/s/subscribe/" + subjectId).session(session).cookie(cookie)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
         System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
         // then
@@ -356,7 +356,7 @@ public class CompanyApiControllerTest {
         sessionToInitPerson();
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.post("/s/recommend/" + subjectId).session(session).cookie(cookie)
+                .perform(MockMvcRequestBuilders.get("/s/recommend/" + subjectId).session(session).cookie(cookie)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
         System.out.println("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
         // then
