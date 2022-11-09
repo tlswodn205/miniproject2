@@ -15,7 +15,7 @@
 
   <insert id="insert">
         INSERT INTO Need_Skill(notice_id, skill, created_At)
-        VALUE(#{noticeId}, #{skill}, now())
+        VALUES(#{noticeId}, #{skill}, now())
       </insert>
 
   <delete id="deleteById">

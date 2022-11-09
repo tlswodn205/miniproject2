@@ -35,7 +35,7 @@
 		person_phone, person_email,
 		is_Gender, address, degree, career,
 		created_At )
-		VALUE(#{userId}, #{personName}, #{personPhone},
+		VALUES(#{userId}, #{personName}, #{personPhone},
 		#{personEmail}, #{isGender},
 		#{address}, #{degree}, #{career}, now())
 	</insert>
@@ -99,7 +99,7 @@
 		substr(person_email,1,
 		instr(person_email,'@')-1) AS person_email
 		FROM
-		user u LEFT
+		users u LEFT
 		OUTER JOIN person p
 		ON u.user_id = p.user_id
 		WHERE p.user_id

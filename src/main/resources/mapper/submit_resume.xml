@@ -15,15 +15,15 @@
 
   <insert id="insert">
     INSERT INTO submit_resume(resume_Id, notice_Id, created_At)
-    VALUE(#{resumeId}, #{noticeId}, now())
+    VALUES(#{resumeId}, #{noticeId}, now())
   </insert>
 
   <delete id="deleteById">
     DELETE FROM submit_resume
     WHERE submit_resume_Id = #{submitResumeId}
   </delete>
-  
-    <select id="findByNoticeId" resultType="site.metacoding.miniproject.domain.submit_resume.SubmitResume">
+
+  <select id="findByNoticeId" resultType="site.metacoding.miniproject.domain.submit_resume.SubmitResume">
     SELECT *
     FROM submit_resume
     WHERE notice_id = #{noticeId}
