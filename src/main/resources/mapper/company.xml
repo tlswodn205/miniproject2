@@ -19,7 +19,7 @@
 
 	<insert id="companyInsertRespDto">
 		INSERT INTO company(company_id, photo, introduction, history, company_goal)
-		VALUE(#{companyId}, #{photo},  #{introduction}, #{history},  #{companyGoal})
+		VALUES(#{companyId}, #{photo},  #{introduction}, #{history},  #{companyGoal})
 	</insert>
 
 
@@ -27,7 +27,7 @@
 		INSERT INTO company(user_Id, company_Name,
 		company_Email, company_Phone,tech, address, ceo_Name,
 		created_At)
-		VALUE(#{userId}, #{companyName}, #{companyEmail},
+		VALUES(#{userId}, #{companyName}, #{companyEmail},
 		#{companyPhone},
 		#{tech},  #{address}, #{ceoName},
 		now())
@@ -51,18 +51,21 @@
 
 	<select id="findToRecommned"
 		resultType="site.metacoding.miniproject.dto.response.company.CompanyRecommendRespDto">
-		SELECT COUNT(recommend.subject_id) as recommend_count ,
-		FIRST.*
-		FROM (SELECT n.*, c.user_id user_id, c.company_name
-		company_name, c.address address
-		FROM (select * FROM notice ORDER BY
-		notice_id desc) n INNER JOIN company c
-		ON n.company_id = c.company_id
-		WHERE is_closed =0 GROUP BY (user_id) ) FIRST LEFT OUTER JOIN
-		recommend
-		ON recommend.subject_id = FIRST.user_id
-		GROUP BY (notice_id)
-		ORDER BY Count(recommend.subject_id) desc
+		SELECT cn.notice_id, cn.notice_title, cn.resume_title, c.address, c.company_name, c.company_id
+		FROM (
+    SELECT n.notice_Id, n.notice_title, n.company_Id ,ML.resume_title
+		FROM (
+    SELECT s.*, pp.resume_title, pp.person_id
+		FROM(
+    SELECT r.person_id, r.resume_title, r.resume_id
+		FROM person p INNER JOIN resume r 
+		ON p.person_id = r.person_id WHERE user_id=#{userId}) pp 
+    INNER JOIN  submit_resume s
+		ON s.resume_Id = pp.resume_Id) ML 
+    INNER JOIN notice n
+		ON ML.notice_Id = n.notice_Id WHERE n.is_closed= false) cn 
+    INNER JOIN company c
+		ON cn.company_id = c.company_id 
 	</select>
 
 	<select id="findToNoticeId"
@@ -71,7 +74,7 @@
 		FROM (SELECT n.*, c.user_id user_id, c.company_name company_name, c.address address
 		FROM (select * FROM notice where notice_id = #{noticeId}) n INNER JOIN company c
 		ON n.company_id = c.company_id
-		WHERE is_closed =0 GROUP BY (user_id) ) FIRST LEFT OUTER JOIN recommend
+		WHERE is_closed =false GROUP BY (user_id) ) FIRST LEFT OUTER JOIN recommend
 		ON recommend.subject_id = FIRST.user_id
 		ORDER BY subject_id desc
 	</select>
@@ -98,7 +101,7 @@
 		c.ceo_name,
 		c.address, c.company_phone, substr(company_email,1,
 		instr(company_email,'@')-1) AS company_email, c.tech
-		FROM user u LEFT
+		FROM users u LEFT
 		OUTER JOIN company c
 		ON u.user_id = c.user_id
 		WHERE c.user_id =
@@ -126,7 +129,7 @@
 
 	<select id="CompanyJoinResult" resultType="site.metacoding.miniproject.dto.response.company.CompanyJoinRespDto">
 		select *
-		from company c inner join user u
+		from company c inner join users u
 		on c.user_Id = u.user_id
 		WHERE c.user_id = #{userId}
 	</select>

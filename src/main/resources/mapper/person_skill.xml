@@ -27,7 +27,7 @@
 
   <insert id="insert">
     INSERT INTO person_Skill(person_id, skill, created_At)
-    VALUE(#{personId}, #{skill}, now())
+    VALUES(#{personId}, #{skill}, now())
   </insert>
 
   <delete id="deleteById">

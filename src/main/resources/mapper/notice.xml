@@ -14,7 +14,7 @@
 
   <insert id="insert">
     INSERT INTO Notice(company_id, notice_title, is_closed, salary, degree, career, notice_content, created_At)
-    VALUE(#{companyId}, #{noticeTitle}, false, #{salary}, #{degree}, #{career}, #{noticeContent}, now())
+    VALUES(#{companyId}, #{noticeTitle}, false, #{salary}, #{degree}, #{career}, #{noticeContent}, now())
   </insert>
 
   <delete id="deleteById">
@@ -62,7 +62,7 @@
     INNER JOIN  submit_resume s
 		ON s.resume_Id = pp.resume_Id) ML 
     INNER JOIN notice n
-		ON ML.notice_Id = n.notice_Id WHERE n.is_closed=0) cn 
+		ON ML.notice_Id = n.notice_Id WHERE n.is_closed= false) cn 
     INNER JOIN company c
 		ON cn.company_id = c.company_id 
 	</select>

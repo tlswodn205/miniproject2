@@ -14,6 +14,7 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -32,11 +33,11 @@ import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 import site.metacoding.miniproject.dto.request.person.PersonJoinReqDto;
 import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateReqDto;
 
-@ActiveProfiles("test") // 테스트 어플리케이션 실행
-@Sql("classpath:truncate.sql")
+@ActiveProfiles("JTest") // 테스트 어플리케이션 실행
 @Transactional
 @AutoConfigureMockMvc // MockMvc Ioc 컨테이너에 등록 실제가 아닌 가짜
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK) // MOCK은 가짜 환경임
+@WebAppConfiguration
 public class PersonApiControllerTest {
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
 

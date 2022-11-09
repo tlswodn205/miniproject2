@@ -1,5 +1,5 @@
 
-DROP TABLE user;
+DROP TABLE users;
 DROP TABLE submit_resume;
 DROP TABLE recommend;
 DROP TABLE person;

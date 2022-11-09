@@ -23,7 +23,7 @@ dependencies {
 	implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.65'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    runtimeOnly 'com.h2database:h2'	
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

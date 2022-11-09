@@ -6,61 +6,61 @@
 	<select id="findAll"
 		resultType="site.metacoding.miniproject.domain.user.User">
 		SELECT *
-		FROM user
+		FROM users
 	</select>
 
 	<select id="findById"
 		resultType="site.metacoding.miniproject.domain.user.User">
 		SELECT *
-		FROM user
+		FROM users
 		WHERE user_id = #{userId}
 	</select>
 
 	<select id="findByUsername"
 		resultType="site.metacoding.miniproject.domain.user.User">
 		SELECT *
-		FROM user
+		FROM users
 		WHERE username = #{username}
 	</select>
 
 	<insert id="insert">
-		INSERT INTO user(username, password, role, created_at )
-		VALUE(#{username}, #{password}, #{role}, now())
+		INSERT INTO users(username, password, role, created_at )
+		VALUES(#{username}, #{password}, #{role}, now())
 	</insert>
 
 	<delete id="deleteById">
-		DELETE FROM user
+		DELETE FROM users
 		WHERE user_id = #{userId}
 	</delete>
 
 	<update id="update">
-		Update user
+		Update users
 		SET password = #{password}
 		WHERE user_id = #{userId}
 	</update>
 
 	<update id="updateToUser">
-		UPDATE user SET password = #{password}
+		UPDATE users SET password = #{password}
 		WHERE user_id = #{userId}
 	</update>
 
 
 	<delete id="deleteUserId">
-  DELETE FROM user
+  DELETE FROM users
   WHERE user_id = #{userId}
   </delete>
 
-  <select id="userIdDeleteResult" 
-  resultType="site.metacoding.miniproject.dto.response.person.UserIdDeleteRespDto">
+	<select id="userIdDeleteResult"
+		resultType="site.metacoding.miniproject.dto.response.person.UserIdDeleteRespDto">
 	SELECT *
-	FROM user
+	FROM users
 	WHERE user_id = #{userId}
 </select>
 
 
-    <insert id="save">
-        INSERT INTO user(username, password, role, created_at )
-		VALUE(#{username}, #{password}, #{role}, now())
+	<insert id="save">
+        INSERT INTO users(username, password, role, created_at )
+		VALUES(#{username}, #{password}, #{role}, now())
     </insert>
 
 </mapper>

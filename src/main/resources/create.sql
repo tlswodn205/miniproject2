@@ -1,6 +1,5 @@
-USE greendb;
 
-create TABLE user(
+create TABLE users(
    user_id INT primary KEY auto_increment,
    username VARCHAR
 (20),
@@ -117,40 +116,40 @@ create table submit_resume(
 );
 
 
-insert into user
+insert into users
    (username, password, role, created_at)
 values('ssar', '1234', 'person', NOW());
-insert into user
+insert into users
    (username, password, role, created_at)
 values('cos', '1234', 'person', NOW());
-insert into user
+insert into users
    (username, password, role, created_at)
 values('sin', '1234', 'person', NOW());
-insert into user
+insert into users
    (username, password, role, created_at)
 values('tan', '1234', 'person', NOW());
-insert into user
+insert into users
    (username, password, role, created_at)
 values('akr', '1234', 'person', NOW());
-insert into user
+insert into users
    (username, password, role, created_at)
 values('arl', '1234', 'person', NOW());
-insert into user
+insert into users
    (username, password, role, created_at)
 values('ire', '1234', 'company', NOW());
-insert into user
+insert into users
    (username, password, role, created_at)
 values('pac', '1234', 'company', NOW());
-insert into user
+insert into users
    (username, password, role, created_at)
 values('hept', '1234', 'company', NOW());
-insert into user
+insert into users
    (username, password, role, created_at)
 values('ppc', '1234', 'company', NOW());
-insert into user
+insert into users
    (username, password, role, created_at)
 values('empc', '1234', 'company', NOW());
-insert into user
+insert into users
    (username, password, role, created_at)
 VALUES('psg', '1234', 'company', NOW());
 
@@ -203,18 +202,15 @@ VALUES('6', 'Flutter', NOW());
 
 insert into resume
    (person_id , resume_title, photo , introduction , my_cloud, created_at)
-VALUES('1', '프론트엔드용이력서', '사진값', '안녕하세요', "www.naver.com", NOW());
+VALUES('1', '프론트엔드용이력서', '사진값', '안녕하세요', 'www.naver.com', NOW());
 
 insert into resume
    (person_id , resume_title, photo , introduction , my_cloud, created_at)
-VALUES('1', '백엔드용이력서', '사진값', '안녕하세요', "www.naver.com", NOW());
+VALUES('1', '백엔드용이력서', '사진값', '안녕하세요', 'www.naver.com', NOW());
 
 INSERT INTO submit_resume
    (resume_id, notice_id, created_at)
-VALUE(8,
-7,
-NOW()
-);
+VALUES(1, 2, NOW());
 
 insert into company
    (user_id, company_name , company_email , company_phone ,tech , address , history , introduction ,photo,company_goal, ceo_name, created_at)
@@ -241,14 +237,6 @@ insert into company
 VALUES('12', '코핀', 'ire@nate.com', '01000000000', '메타버스', '제주특별자치도', '2016', '안녕하세요', NULL, null, '관리자', NOW());
 
 UPDATE company SET company_goal = '세계를 선도하는 기업' WHERE company_Id =1;
-
-SELECT *
-from notice;
-SELECT *
-from need_skill;
-
-
-
 
 insert into notice
    (company_id , notice_title, is_closed , salary ,degree, career, created_at)
@@ -312,23 +300,22 @@ INSERT into need_skill
 VALUES('5', 'Flutter', NOW());
 INSERT INTO subscribe
    (user_id, subject_id, created_At)
-VALUE(1,
-5,
-NOW()
+VALUES(1,
+      5,
+      NOW()
 );
 
 UPDATE company SET introduction = '알파트릭스는 혁신을 이끄는 기업입니다.' WHERE company_Id = 2;
 
 INSERT INTO resume
    (person_id, resume_title, photo, introduction, my_cloud, created_At )
-VALUE(2,
-"재능충지아링",
-NULL,
-"지아링링",
-"www.naver.com",
-NOW()
+VALUES(2,
+      '재능충지아링',
+      NULL,
+      '지아링링',
+      'www.naver.com',
+      NOW()
 );
-COMMIT;
 
 INSERT into person_skill
    (person_id, skill, created_at)

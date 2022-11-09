@@ -15,7 +15,7 @@
 
   <insert id="insert">
     INSERT INTO recommend(user_id, subject_id, created_At)
-    VALUE(#{userId}, #{subjectId}, now())
+    VALUES(#{userId}, #{subjectId}, now())
   </insert>
 
   <delete id="delete">
