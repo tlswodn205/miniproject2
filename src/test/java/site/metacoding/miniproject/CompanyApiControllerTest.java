@@ -448,7 +448,7 @@ public class CompanyApiControllerTest {
 
         // when
         ResultActions resultActions = mvc
-                .perform(get("/noticeDetailForm/" + noticeId).accept(APPLICATION_JSON));
+                .perform(get("/s/noticeDetailForm/" + noticeId).accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
