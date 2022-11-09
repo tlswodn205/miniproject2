@@ -167,7 +167,7 @@ public class CompanyController {
         skillList);
     return new CMRespDto<List<CompanyRecommendRespDto>>(
         1,
-        "기업불러오기 성공",
+        "기술별 기업불러오기 성공",
         CompanyRecommendDtoList);
   }
 
@@ -182,11 +182,11 @@ public class CompanyController {
         subscribeDtoList);
   }
 
-  @DeleteMapping("/s/deleteSubscribe/{subscribeId}")
-  public CMRespDto<?> deleteSubscribe(@PathVariable Integer subscribeId) {
+  @DeleteMapping("/s/deleteSubscribe/{subjectId}")
+  public CMRespDto<?> deleteSubscribe(@PathVariable Integer subjectId) {
     SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
     SubscribeDeleteRespDto subscribeDeleteRespDto = companyService.구독취소(userPS.getUserId(),
-        subscribeId);
+        subjectId);
     return new CMRespDto<>(1, "구독 취소", subscribeDeleteRespDto);
   }
 
@@ -197,31 +197,31 @@ public class CompanyController {
     return new CMRespDto<>(1, "기업 상세보기 페이지 불러오기 완료", companyDetailRespDto);
   }
 
-  @PostMapping("/s/subscribe/{subjectId}")
+  @GetMapping("/s/subscribe/{subjectId}")
   public CMRespDto<?> companySubscribe(@PathVariable Integer subjectId, Model model) {
-    SessionUserDto principal = (SessionUserDto) session.getAttribute("principal");
-    Integer subscribeId = companyService.구독Id불러오기(principal.getUserId(), subjectId);
+    SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
+    Integer subscribeId = companyService.구독Id불러오기(userPS.getUserId(), subjectId);
     if (subscribeId == null) {
-      companyService.구독하기(principal.getUserId(), subjectId);
-      subscribeId = companyService.구독Id불러오기(principal.getUserId(), subjectId);
+      companyService.구독하기(userPS.getUserId(), subjectId);
+      subscribeId = companyService.구독Id불러오기(userPS.getUserId(), subjectId);
       return new CMRespDto<Integer>(1, "구독 완료", subscribeId);
     }
-    SubscribeDeleteRespDto subscribeDeleteRespDto = companyService.구독취소(principal.getUserId(), subscribeId);
+    SubscribeDeleteRespDto subscribeDeleteRespDto = companyService.구독취소(userPS.getUserId(), subjectId);
     return new CMRespDto<>(1, "구독 취소 완료", subscribeDeleteRespDto);
   }
 
-  @PostMapping("/s/recommend/{subjectId}")
-  public CMRespDto<RecommendDetailRespDto> companyRecommend(@PathVariable Integer subjectId) {
+  @GetMapping("/s/recommend/{subjectId}")
+  public CMRespDto<?> companyRecommend(@PathVariable Integer subjectId) {
     SessionUserDto principal = (SessionUserDto) session.getAttribute("principal");
     RecommendDetailRespDto recommendDetail = companyService.기업추천불러오기(principal.getUserId(), subjectId);
     if (recommendDetail.getRecommendId() == null) {
       companyService.기업추천하기(principal.getUserId(), subjectId);
       recommendDetail = companyService.기업추천불러오기(principal.getUserId(), subjectId);
-      return new CMRespDto<RecommendDetailRespDto>(1, "추천 완료", recommendDetail);
+      return new CMRespDto<>(1, "추천 완료", recommendDetail);
     }
     companyService.기업추천취소(recommendDetail.getRecommendId());
     recommendDetail = companyService.기업추천불러오기(principal.getUserId(), subjectId);
-    return new CMRespDto<RecommendDetailRespDto>(1, "추천 취소 완료", recommendDetail);
+    return new CMRespDto<>(1, "추천 취소 완료", recommendDetail);
   }
 
   @GetMapping("/s/noticeLoadForm")
@@ -240,12 +240,12 @@ public class CompanyController {
 
   @PostMapping("/s/noticeInsert")
   public CMRespDto<?> noticeInsert(@RequestBody NoticeInsertReqDto noticeInsertDto) {
-    NoticeInsertRespDto noticeInsertRespDto = noticeDao.noticeInsertResult(noticeInsertDto.getCompanyId());
-    noticeInsertRespDto.setNeedSkill(needSkillDao.findByNoticeId(noticeInsertRespDto.getNoticeId()));
+    SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
+    NoticeInsertRespDto noticeInsertRespDto = companyService.공고등록하기(noticeInsertDto, userPS);
     return new CMRespDto<>(1, "공고 등록 완료", noticeInsertRespDto);
   }
 
-  @GetMapping("/noticeDetailForm/{noticeId}")
+  @GetMapping("/s/noticeDetailForm/{noticeId}")
   public CMRespDto<?> noticeDetail(@PathVariable Integer noticeId, Model model) {
     SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
     NoticeDetailRespDto noticeDetailRespDto = personService.공고하나불러오기(noticeId, userPS);

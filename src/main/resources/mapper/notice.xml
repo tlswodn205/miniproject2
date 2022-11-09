@@ -14,7 +14,7 @@
 
   <insert id="insert">
     INSERT INTO Notice(company_id, notice_title, is_closed, salary, degree, career, notice_content, created_At)
-    VALUES(#{companyId}, #{noticeTitle}, #{isClosed}, #{salary}, #{degree}, #{career}, #{noticeContent}, now())
+    VALUES(#{companyId}, #{noticeTitle}, false, #{salary}, #{degree}, #{career}, #{noticeContent}, now())
   </insert>
 
   <delete id="deleteById">
@@ -72,7 +72,7 @@
     select *
     from notice
     where company_id = #{companyId}
-    order by created_At desc
+    order by notice_id desc
 		FETCH NEXT 1 ROWS ONLY
   </select>
 
