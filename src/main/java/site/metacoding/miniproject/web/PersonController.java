@@ -34,6 +34,7 @@ import site.metacoding.miniproject.dto.response.person.PersonMyPageUpdateRespDto
 import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto;
 import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
 import site.metacoding.miniproject.dto.response.resume.SubmitResumeRespDto;
+import site.metacoding.miniproject.dto.response.resume.ResumeDeleteRespDto;
 import site.metacoding.miniproject.dto.response.resume.ResumeWriteRespDto;
 import site.metacoding.miniproject.service.CompanyService;
 import site.metacoding.miniproject.service.PersonService;
@@ -115,7 +116,7 @@ public class PersonController {
 	public CMRespDto<List<InterestPersonRespDto>> interestPersonSkillList(@RequestBody List<String> skillList,
 			Model model) {
 		List<InterestPersonRespDto> interestPersonDto = personService.관심구직자리스트(skillList);
-		return new CMRespDto<>(1, "기술별 관심 구칙자 불러오기 완료", interestPersonDto);
+		return new CMRespDto<>(1, "기술별 관심 구직자 불러오기 완료", interestPersonDto);
 	}
 
 	// 구직자 마이페이지
@@ -130,6 +131,7 @@ public class PersonController {
 	@PutMapping("/s/personMypageUpdate")
 	public CMRespDto<?> updateToPerson(@RequestBody PersonMyPageUpdateReqDto personMyPageUpdateDto) {
 		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
+		personMyPageUpdateDto.setUserId(userPS.getUserId());
 		PersonMyPageUpdateRespDto personMyPageUpdateRespDto = personService.구직자회원정보수정(personMyPageUpdateDto);
 		return new CMRespDto<>(1, "구직자회원정보수정 성공", personMyPageUpdateRespDto);
 	}
@@ -137,8 +139,8 @@ public class PersonController {
 	@DeleteMapping("/s/deleteResume/{resumeId}")
 	public CMRespDto<?> resumeDelete(@PathVariable Integer resumeId) {
 		SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
-		personService.이력서삭제하기(resumeId, userPS.getUserId());
-		return new CMRespDto<>(1, "이력서 삭제 성공", null);
+		ResumeDeleteRespDto resumeDeleteRespDto = personService.이력서삭제하기(resumeId, userPS.getUserId());
+		return new CMRespDto<>(1, "이력서 삭제 성공", resumeDeleteRespDto);
 	}
 
 	@GetMapping("/s/resumeManageForm")

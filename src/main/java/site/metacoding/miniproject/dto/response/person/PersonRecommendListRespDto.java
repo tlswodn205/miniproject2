@@ -16,7 +16,6 @@ public class PersonRecommendListRespDto {
 	private Integer recommendCount;
 	private Integer subjectId;
 	private String personName;
-	private String resumeTitle;
 	private Integer career;
 	private String degree;
 	private String address;

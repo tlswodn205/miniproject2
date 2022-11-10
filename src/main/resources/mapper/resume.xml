@@ -43,7 +43,13 @@
     select *
     from resume
     where person_id = #{personId}
-    order by created_At desc
+    order by resume_id desc
 		FETCH NEXT 1 ROWS ONLY
+  </select>
+
+  <select id="resumeDeleteResult" resultType="site.metacoding.miniproject.dto.response.resume.ResumeDeleteRespDto">
+    select *
+    from resume
+    where resume_id = #{resumeId}
   </select>
 </mapper>

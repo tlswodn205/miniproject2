@@ -1,3 +1,15 @@
+USE greenDb;
+
+DROP TABLE users;
+DROP TABLE submit_resume;
+DROP TABLE recommend;
+DROP TABLE person;
+DROP TABLE person_skill;
+DROP TABLE resume;
+DROP TABLE company;
+DROP TABLE notice;
+DROP TABLE need_skill;
+DROP TABLE subscribe;
 
 create TABLE users(
    user_id INT primary KEY auto_increment,
@@ -159,7 +171,7 @@ VALUES('6', '7', NOW());
 
 insert into subscribe
    (user_id, subject_id, created_at)
-VALUES('4', '6', NOW());
+VALUES('4', '7', NOW());
 
 
 insert into person
@@ -184,12 +196,15 @@ VALUES('6', '이유미', 'arl@nate.com', '01000000000', 1 , '경기도 하남시
 INSERT into person_skill
    (person_id, skill, created_at)
 VALUES('6', 'java', NOW());
+
 INSERT into person_skill
    (person_id, skill, created_at)
 VALUES('2', 'javaScript', NOW());
+
 INSERT into person_skill
    (person_id, skill, created_at)
 VALUES('2', 'HTML/CSS', NOW());
+
 INSERT into person_skill
    (person_id, skill, created_at)
 VALUES('4', 'MySQL', NOW());
@@ -200,6 +215,18 @@ INSERT into person_skill
    (person_id, skill, created_at)
 VALUES('6', 'Flutter', NOW());
 
+INSERT into person_skill
+   (person_id, skill, created_at)
+VALUES('1', 'AWS', NOW());
+
+INSERT into person_skill
+   (person_id, skill, created_at)
+VALUES('1', 'Flutter', NOW());
+
+INSERT into person_skill
+   (person_id, skill, created_at)
+VALUES('1', 'java', NOW());
+
 insert into resume
    (person_id , resume_title, photo , introduction , my_cloud, created_at)
 VALUES('1', '프론트엔드용이력서', '사진값', '안녕하세요', 'www.naver.com', NOW());
@@ -208,9 +235,6 @@ insert into resume
    (person_id , resume_title, photo , introduction , my_cloud, created_at)
 VALUES('1', '백엔드용이력서', '사진값', '안녕하세요', 'www.naver.com', NOW());
 
-INSERT INTO submit_resume
-   (resume_id, notice_id, created_at)
-VALUES(1, 2, NOW());
 
 insert into company
    (user_id, company_name , company_email , company_phone ,tech , address , history , introduction ,photo,company_goal, ceo_name, created_at)
@@ -270,6 +294,12 @@ VALUES('12', '침식체 잡을 카운터구함', 6, '3천만원', '대졸비전�
 INSERT INTO recommend
    (user_id, subject_id, created_at)
 VALUES(1, 4 , NOW());
+INSERT INTO recommend
+   (user_id, subject_id, created_at)
+VALUES(7, 1 , NOW());
+INSERT INTO recommend
+   (user_id, subject_id, created_at)
+VALUES(7, 4 , NOW());
 
 INSERT into need_skill
    (notice_id, skill, created_at)
@@ -320,3 +350,13 @@ VALUES(2,
 INSERT into person_skill
    (person_id, skill, created_at)
 VALUES('4', 'JAVA', NOW());
+
+INSERT INTO submit_resume
+   (resume_id, notice_id, created_at)
+VALUES(1, 1, NOW());
+INSERT INTO submit_resume
+   (resume_id, notice_id, created_at)
+VALUES(3, 1, NOW());
+INSERT INTO submit_resume
+   (resume_id, notice_id, created_at)
+VALUES(1, 2, NOW());

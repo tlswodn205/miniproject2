@@ -40,6 +40,7 @@ import site.metacoding.miniproject.dto.response.person.PersonMyPageRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonMyPageUpdateRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto;
 import site.metacoding.miniproject.dto.response.recommend.RecommendDetailRespDto;
+import site.metacoding.miniproject.dto.response.resume.ResumeDeleteRespDto;
 import site.metacoding.miniproject.dto.response.resume.ResumeFormRespDto;
 import site.metacoding.miniproject.dto.response.resume.ResumeWriteRespDto;
 import site.metacoding.miniproject.handler.ApiException;
@@ -161,10 +162,10 @@ public class PersonService {
 	@Transactional
 	public ResumeWriteRespDto 이력서등록(ResumeWriteReqDto resumeWriteDto, Integer userId) {
 
-		Resume resume = resumeWriteDto.toEntity(personDao.findToPersonMyPage(userId).getPersonId());
+		Resume resume = resumeWriteDto.toEntity();
 		resumeDao.insert(resume);
 		ResumeWriteRespDto resumeWriteRespDto = resumeDao
-				.resumeWriteResult(personDao.findToPersonMyPage(userId).getPersonId());
+				.resumeWriteResult(resumeWriteDto.getPersonId());
 		return resumeWriteRespDto;
 	}
 
@@ -222,8 +223,9 @@ public class PersonService {
 	// 구직자 마이페이지 정보 보기
 	@Transactional
 	public PersonMyPageRespDto 구직자마이페이지정보보기(Integer userId) {
-		PersonMyPageRespDto personMyPageDtoPs = personDao.findToPersonMyPage(userId);
-		return personMyPageDtoPs;
+		PersonMyPageRespDto personMyPageRespDtoPs = personDao.findToPersonMyPage(userId);
+		personMyPageRespDtoPs.setSkill(personSkillDao.findByPersonId(personMyPageRespDtoPs.getPersonId()));
+		return personMyPageRespDtoPs;
 
 	}
 
@@ -245,13 +247,15 @@ public class PersonService {
 	}
 
 	@Transactional
-	public void 이력서삭제하기(Integer resumeId, Integer userId) {
+	public ResumeDeleteRespDto 이력서삭제하기(Integer resumeId, Integer userId) {
 		Resume resume = resumeDao.findById(resumeId);
 		Integer personId = personDao.findToId(userId);
 		if (resume.getPersonId() != personId) {
 			throw new ApiException("해당 이력서를 삭제할 수 없습니다.");
 		}
+		ResumeDeleteRespDto resumeDeleteRespDto = resumeDao.resumeDeleteResult(resumeId);
 		resumeDao.deleteById(resumeId);
+		return resumeDeleteRespDto;
 	}
 
 	@Transactional

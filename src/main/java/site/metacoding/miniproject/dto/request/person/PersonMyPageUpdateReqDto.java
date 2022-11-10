@@ -12,10 +12,9 @@ public class PersonMyPageUpdateReqDto {
 	private String password;
 	private String personName;
 	private String personPhone;
-	private String isGender;
+	private Boolean isGender;
 	private String address;
 	private String degree;
 	private Integer career;
 	private String personEmail;
-	/* private List<PersonSkill> skill; */
 }
