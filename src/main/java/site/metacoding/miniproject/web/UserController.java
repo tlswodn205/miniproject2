@@ -17,6 +17,7 @@ import site.metacoding.miniproject.dto.response.person.UserIdDeleteRespDto;
 import site.metacoding.miniproject.service.UserService;
 import site.metacoding.miniproject.utill.JWTToken.CookieForToken;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,15 +27,15 @@ public class UserController {
   private final HttpSession session;
 
   @PostMapping("/login")
-  public CMRespDto<?> login(@RequestBody LoginReqDto loginDto,HttpServletResponse resp) {
+  public CMRespDto<?> login(@RequestBody LoginReqDto loginDto, HttpServletResponse resp) {
     SessionUserDto principal = userService.로그인(loginDto);
     if (principal == null) {
       return new CMRespDto<>(-1, "로그인실패", null);
     }
-		String token = CreateJWTToken.createToken(principal);
+    String token = CreateJWTToken.createToken(principal);
 
-		resp.addHeader("Authorization", "Bearer " + token);
-		resp.addCookie(CookieForToken.setCookie(token));
+    resp.addHeader("Authorization", "Bearer " + token);
+    resp.addCookie(CookieForToken.setCookie(token));
     return new CMRespDto<>(1, "로그인성공", principal);
   }
 
@@ -47,21 +48,20 @@ public class UserController {
   // 로그아웃
   @GetMapping("/logout")
   public CMRespDto<?> logout(HttpServletResponse resp) {
-		Cookie cookie = new Cookie("Authorization", null);
-		cookie.setMaxAge(0);
-		cookie.setPath("/");
-		resp.addCookie(cookie);
+    Cookie cookie = new Cookie("Authorization", null);
+    cookie.setMaxAge(0);
+    cookie.setPath("/");
+    resp.addCookie(cookie);
 
     SessionUserDto userPS = (SessionUserDto) session.getAttribute("principal");
 
-		session.removeAttribute("principal");
+    session.removeAttribute("principal");
     return new CMRespDto<>(1, "로그아웃 성공", userPS);
   }
 
-  // 메인 페이지
-  @GetMapping({ "/mainForm", "/" })
-  public CMRespDto<?> mainForm() {
-    return new CMRespDto<>(1, "메인 페이지 불러오기 성공", null);
+  @GetMapping(value = "/")
+  public String isOk() {
+    return "예아";
   }
 
   // // role 구분하기 연습
