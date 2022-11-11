@@ -1,4 +1,4 @@
-name: aws-v5
+name: miniproject2
 on:
     push:
         branches:
