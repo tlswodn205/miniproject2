@@ -1,16 +1,3 @@
-USE greenDb;
-
-DROP TABLE users;
-DROP TABLE submit_resume;
-DROP TABLE recommend;
-DROP TABLE person;
-DROP TABLE person_skill;
-DROP TABLE resume;
-DROP TABLE company;
-DROP TABLE notice;
-DROP TABLE need_skill;
-DROP TABLE subscribe;
-
 create TABLE users(
    user_id INT primary KEY auto_increment,
    username VARCHAR
@@ -351,9 +338,7 @@ INSERT into person_skill
    (person_id, skill, created_at)
 VALUES('4', 'JAVA', NOW());
 
-INSERT INTO submit_resume
-   (resume_id, notice_id, created_at)
-VALUES(1, 1, NOW());
+
 INSERT INTO submit_resume
    (resume_id, notice_id, created_at)
 VALUES(3, 1, NOW());

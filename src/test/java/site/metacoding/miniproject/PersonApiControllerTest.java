@@ -403,7 +403,7 @@ public class PersonApiControllerTest {
 
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.post("/s/submitResume").session(session).cookie(cookie).content(body)
+                .perform(MockMvcRequestBuilders.post("/s/submitResume/").session(session).cookie(cookie).content(body)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON));
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
