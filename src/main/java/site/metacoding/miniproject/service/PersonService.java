@@ -3,15 +3,12 @@ package site.metacoding.miniproject.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.websocket.Session;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.company.CompanyDao;
 import site.metacoding.miniproject.domain.need_skill.NeedSkillDao;
-import site.metacoding.miniproject.domain.notice.Notice;
 import site.metacoding.miniproject.domain.notice.NoticeDao;
 import site.metacoding.miniproject.domain.person.Person;
 import site.metacoding.miniproject.domain.person.PersonDao;

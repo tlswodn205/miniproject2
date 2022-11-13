@@ -17,7 +17,6 @@ import site.metacoding.miniproject.dto.response.person.UserIdDeleteRespDto;
 import site.metacoding.miniproject.service.UserService;
 import site.metacoding.miniproject.utill.JWTToken.CookieForToken;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RequiredArgsConstructor
 @RestController
@@ -59,15 +58,10 @@ public class UserController {
     return new CMRespDto<>(1, "로그아웃 성공", userPS);
   }
 
-  @GetMapping(value = "/")
+  @GetMapping("/")
   public String isOk() {
     return "예아";
   }
-
-  // // role 구분하기 연습
-  // @GetMapping("/rolesplit")
-  // public
-  // User principal = userService.유저롤로개인기업구분하기(null);
 
   @DeleteMapping("/deleteuser/{userid}")
   public CMRespDto<?> deleteUserId(@PathVariable Integer userid) {

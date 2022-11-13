@@ -1,6 +1,5 @@
 package site.metacoding.miniproject;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,12 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import site.metacoding.miniproject.domain.resume.Resume;
 import site.metacoding.miniproject.domain.resume.ResumeDao;
-import site.metacoding.miniproject.domain.user.User;
 import site.metacoding.miniproject.domain.user.UserDao;
 import site.metacoding.miniproject.dto.SessionUserDto;
-import site.metacoding.miniproject.dto.request.company.CompanyJoinReqDto;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 
 @ActiveProfiles("JTest") // 테스트 어플리케이션 실행

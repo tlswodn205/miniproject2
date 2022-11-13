@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.company.Company;
 import site.metacoding.miniproject.domain.company.CompanyDao;
-import site.metacoding.miniproject.domain.need_skill.NeedSkill;
 import site.metacoding.miniproject.domain.need_skill.NeedSkillDao;
 import site.metacoding.miniproject.domain.notice.Notice;
 import site.metacoding.miniproject.domain.notice.NoticeDao;

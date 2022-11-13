@@ -41,3 +41,7 @@ tasks.named('test') {
 jar {
 	enabled = false
 }
+
+test.onlyIf {
+    !project.hasProperty('test')
+}

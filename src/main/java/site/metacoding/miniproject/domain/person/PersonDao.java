@@ -2,10 +2,8 @@ package site.metacoding.miniproject.domain.person;
 
 import java.util.List;
 
-import site.metacoding.miniproject.dto.request.person.PersonMyPageReqDto;
 import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateReqDto;
 import site.metacoding.miniproject.dto.response.person.PersonInfoRespDto;
-import site.metacoding.miniproject.dto.response.person.PersonJoinRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonMyPageRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonMyPageUpdateRespDto;
 import site.metacoding.miniproject.dto.response.person.PersonRecommendListRespDto;

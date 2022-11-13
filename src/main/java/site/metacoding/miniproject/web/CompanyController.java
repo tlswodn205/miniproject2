@@ -1,10 +1,6 @@
 package site.metacoding.miniproject.web;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
@@ -15,23 +11,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.miniproject.domain.company.Company;
-import site.metacoding.miniproject.domain.need_skill.NeedSkillDao;
-import site.metacoding.miniproject.domain.notice.NoticeDao;
 import site.metacoding.miniproject.domain.user.User;
 import site.metacoding.miniproject.dto.SessionUserDto;
-import site.metacoding.miniproject.dto.request.company.CompanyInsertReqDto;
 import site.metacoding.miniproject.dto.request.company.CompanyJoinReqDto;
 import site.metacoding.miniproject.dto.request.company.CompanyMyPageUpdateReqDto;
 import site.metacoding.miniproject.dto.request.notice.NoticeInsertReqDto;
 import site.metacoding.miniproject.dto.response.CMRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyDetailRespDto;
-import site.metacoding.miniproject.dto.response.company.CompanyInsertRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyIntroductionRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyJoinRespDto;
 import site.metacoding.miniproject.dto.response.company.CompanyMyPageRespDto;
@@ -55,8 +45,6 @@ public class CompanyController {
   private final CompanyService companyService;
   private final UserService userService;
   private final PersonService personService;
-  private final NoticeDao noticeDao;
-  private final NeedSkillDao needSkillDao;
 
   // 기업회원가입
   @PostMapping("/joinCompany")
@@ -117,37 +105,6 @@ public class CompanyController {
     CompanyIntroductionRespDto companyPS2 = companyService.기업이력가져오기(
         userPS.getUserId());
     return new CMRespDto<>(1, "기업소개등록 페이지 불러오기", companyPS2);
-  }
-
-  @PostMapping(value = "/company/companyInsert/{companyId}")
-  public CMRespDto<?> create(
-      @RequestPart("file") MultipartFile file,
-      @PathVariable Integer companyId,
-      @RequestPart("companyInsertReqDto") CompanyInsertReqDto companyInsertReqDto) throws Exception {
-    int pos = file.getOriginalFilename().lastIndexOf(".");
-    String extension = file.getOriginalFilename().substring(pos + 1);
-    String filePath = "C:\\temp\\img\\";
-    String imgSaveName = UUID.randomUUID().toString();
-    String imgName = imgSaveName + "." + extension;
-
-    File makeFileFolder = new File(filePath);
-    if (!makeFileFolder.exists()) {
-      if (!makeFileFolder.mkdir()) {
-        throw new Exception("File.mkdir():Fail.");
-      }
-    }
-
-    File dest = new File(filePath, imgName);
-    try {
-      Files.copy(file.getInputStream(), dest.toPath());
-    } catch (IOException e) {
-      e.printStackTrace();
-      System.out.println("사진저장");
-    }
-    companyInsertReqDto.setPhoto(imgName);
-
-    CompanyInsertRespDto companyInsertRespDto = companyService.기업이력등록하기(companyId, companyInsertReqDto);
-    return new CMRespDto<>(1, "업로드 성공", companyInsertRespDto);
   }
 
   @GetMapping("/matchingListFrom")

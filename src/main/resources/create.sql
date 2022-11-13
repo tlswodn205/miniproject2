@@ -342,6 +342,7 @@ VALUES('4', 'JAVA', NOW());
 INSERT INTO submit_resume
    (resume_id, notice_id, created_at)
 VALUES(3, 1, NOW());
+
 INSERT INTO submit_resume
    (resume_id, notice_id, created_at)
 VALUES(1, 2, NOW());

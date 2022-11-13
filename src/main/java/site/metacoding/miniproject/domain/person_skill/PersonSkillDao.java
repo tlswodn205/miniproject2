@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import site.metacoding.miniproject.dto.response.person.PersonInfoRespDto;
-
 public interface PersonSkillDao {
 	public void insert(@Param("personId") Integer personId, @Param("skill") String skill);
 

@@ -2,7 +2,6 @@ package site.metacoding.miniproject.domain.user;
 
 import java.sql.Timestamp;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 

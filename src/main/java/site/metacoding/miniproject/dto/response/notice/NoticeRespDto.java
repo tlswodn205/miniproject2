@@ -5,7 +5,6 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import site.metacoding.miniproject.domain.need_skill.NeedSkill;
 
 @Getter
 @Setter

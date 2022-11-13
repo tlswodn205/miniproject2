@@ -3,7 +3,6 @@ package site.metacoding.miniproject;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,7 +27,6 @@ import site.metacoding.miniproject.domain.user.UserDao;
 import site.metacoding.miniproject.dto.SessionUserDto;
 import site.metacoding.miniproject.dto.request.resume.ResumeWriteReqDto;
 import site.metacoding.miniproject.dto.request.resume.SubmitResumeReqDto;
-import site.metacoding.miniproject.dto.response.person.InterestPersonRespDto;
 import site.metacoding.miniproject.utill.JWTToken.CreateJWTToken;
 import site.metacoding.miniproject.dto.request.person.PersonJoinReqDto;
 import site.metacoding.miniproject.dto.request.person.PersonMyPageUpdateReqDto;
